@@ -1,0 +1,26 @@
+
+<button #undo [disabled]="this.getUndoRedo().getLastUndo() === undefined"
+[title]="this.getUndoRedo().getLastOrEmptyUndoMessage()">Undo</button>
+<button #redo [disabled]="this.getUndoRedo().getLastRedo() === undefined"
+[title]="this.getUndoRedo().getLastOrEmptyRedoMessage()">Redo</button>
+<br/><br/>
+
+
+
+<textarea #textfield rows="4" cols="50" value="{{getText()}}"></textarea>
+<br/>
+<button #clearbutton>Clear text</button>
+
+<br/><br/>
+
+<p>
+  Multi-touch (two touches) creates a rectangle.<br/>
+  Three taps changes the color of the targeted rectangle.<br/>
+  A long touch (2 seconds) removes the targeted rectangle.<br/>
+  Swipe horizontally to clear all the SVG shapes.<br/>
+</p>
+<br/>
+
+<svg #canvas width="1000" height="600" style="border:1px solid black;">
+</svg>
+
