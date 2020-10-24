@@ -2,21 +2,21 @@ import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {
   buttonBinder,
   longTouchBinder,
-  multiTouchBinder,
-  Redo,
+  multiTouchBinder, panBinder,
+  Redo, scrollBinder,
   swipeBinder,
   tapBinder,
   textInputBinder,
   Undo,
   UndoCollector
 } from 'interacto';
-import {SetText} from './command/SetText';
 import {TextData} from './model/TextData';
 import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
+import {SetText} from './command/SetText';
 
 @Component({
   selector: 'app-root',
@@ -51,51 +51,6 @@ export class AppComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    // ErrorCatcher.getInstance().getErrors().subscribe(err => {
-    //   console.error(err);
-    // });
-
-    // let stableAxe: number | undefined;
-    // let moveAxe: number | undefined;
-    // const minDistance = 200;
-    // const horizontal = false;
-    //
-    // (this.canvas.nativeElement as HTMLElement).addEventListener('touchstart', evt => {
-    //   moveAxe = horizontal ? evt.changedTouches[0].clientX : evt.changedTouches[0].clientY;
-    //   stableAxe = horizontal ? evt.changedTouches[0].clientY : evt.changedTouches[0].clientX;
-    //   evt.preventDefault();
-    // });
-    //
-    // (this.canvas.nativeElement as HTMLElement).addEventListener('touchmove', evt => {
-    //   if (stableAxe === undefined) {
-    //     return;
-    //   }
-    //
-    //   evt.preventDefault();
-    //   evt.stopImmediatePropagation();
-    //
-    //   const stableAxe2 = horizontal ? evt.changedTouches[0].clientY : evt.changedTouches[0].clientX;
-    //   if (Math.abs(stableAxe - stableAxe2) > 70) {
-    //     stableAxe = undefined;
-    //   }
-    // });
-    //
-    // (this.canvas.nativeElement as HTMLElement).addEventListener('touchend', evt => {
-    //   if (stableAxe === undefined) {
-    //     return;
-    //   }
-    //
-    //   evt.preventDefault();
-    //   evt.stopImmediatePropagation();
-    //
-    //   const moveAxe2 = horizontal ? evt.changedTouches[0].clientX : evt.changedTouches[0].clientY;
-    //   // const y2 = evt.changedTouches[0].clientY;
-    //
-    //   if (Math.abs(moveAxe - moveAxe2) > minDistance) {
-    //     console.log('swipe');
-    //   }
-    // });
-
     const drawrect = new DrawRect(this.canvas.nativeElement);
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.doIt();
@@ -131,14 +86,16 @@ export class AppComponent implements AfterViewInit {
       .stopImmediatePropagation()
       .bind();
 
-    const boundary = this.canvas.nativeElement.getBoundingClientRect();
-
     tapBinder(3)
       .toProduce(i => new ChangeColor(i.getTapData()[0].getSrcObject() as SVGElement))
       .onDynamic(this.canvas.nativeElement)
       .when(i => i.getTapData()[0].getSrcObject() !== this.canvas.nativeElement
         && i.getTapData()[0].getSrcObject() instanceof SVGElement)
+      // Does not continue to run if the first targeted node is not an SVG element
+      .strictStart()
       .bind();
+
+    const boundary = this.canvas.nativeElement.getBoundingClientRect();
 
     multiTouchBinder(2)
       .toProduce(i => new DrawRect(this.canvas.nativeElement as SVGSVGElement))
