@@ -1,28 +1,28 @@
-import { CommandImpl } from 'interacto';
-import { TextData } from '../model/TextData';
+import {DataService} from '../service/data.service';
+import {CommandBase, Undoable} from 'interacto';
 
 
-export class ClearText extends CommandImpl {
+export class ClearText extends CommandBase implements Undoable {
     private memento: string;
 
-    public constructor(private text: TextData) {
+    public constructor(private data: DataService) {
         super();
     }
 
     protected createMemento(): void {
-        this.memento = this.text.text;
+        this.memento = this.data.txt;
     }
 
-    protected doCmdBody(): void {
-        this.text.text = '';
+    protected execution(): void {
+        this.data.txt = '';
     }
 
     public undo(): void {
-        this.text.text = this.memento;
+        this.data.txt = this.memento;
     }
 
     public redo(): void {
-        this.doCmdBody();
+        this.execution();
     }
 
     public getUndoName(): string {

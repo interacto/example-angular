@@ -1,6 +1,6 @@
-import {CommandImpl, Undoable} from 'interacto';
+import {CommandBase, Undoable} from 'interacto';
 
-export class DeleteAll extends CommandImpl implements Undoable {
+export class DeleteAll extends CommandBase implements Undoable {
   private mementoContent: Array<Node>;
 
   public constructor(private readonly svgDoc: SVGSVGElement) {
@@ -12,7 +12,7 @@ export class DeleteAll extends CommandImpl implements Undoable {
     this.mementoContent = Array.from(this.svgDoc.children);
   }
 
-  protected doCmdBody(): void {
+  protected execution(): void {
     this.redo();
   }
 

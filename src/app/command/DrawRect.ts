@@ -1,6 +1,6 @@
-import {CommandImpl, Undoable} from 'interacto';
+import {CommandBase, Undoable} from 'interacto';
 
-export class DrawRect extends CommandImpl implements Undoable {
+export class DrawRect extends CommandBase implements Undoable {
   private rec: SVGRectElement;
   private minX: number;
   private minY: number;
@@ -11,7 +11,7 @@ export class DrawRect extends CommandImpl implements Undoable {
     super();
   }
 
-  protected doCmdBody(): void {
+  protected execution(): void {
     if (this.rec === undefined) {
       this.rec = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
       this.svgdoc.appendChild(this.rec);

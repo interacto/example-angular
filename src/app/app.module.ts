@@ -1,7 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { TextData } from './model/TextData';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
   declarations: [
@@ -9,8 +11,11 @@ import { TextData } from './model/TextData';
   ],
   imports: [
     BrowserModule,
+    MatCardModule,
+    MatButtonModule,
+    DragDropModule
   ],
-  providers: [TextData],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

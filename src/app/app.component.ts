@@ -1,22 +1,22 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {
-  buttonBinder,
-  longTouchBinder,
-  multiTouchBinder, panBinder,
-  Redo, scrollBinder,
-  swipeBinder,
-  tapBinder,
-  textInputBinder,
-  Undo,
-  UndoCollector
-} from 'interacto';
-import {TextData} from './model/TextData';
 import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
 import {SetText} from './command/SetText';
+import {DataService} from './service/data.service';
+import {
+  buttonBinder,
+  longTouchBinder,
+  multiTouchBinder,
+  Redo,
+  swipeBinder,
+  tapBinder,
+  textInputBinder,
+  Undo,
+  UndoCollector
+} from 'interacto';
 
 @Component({
   selector: 'app-root',
@@ -39,11 +39,13 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef;
 
-  public constructor(private text: TextData) {
-  }
+  @ViewChild('cards1')
+  private cards1: ElementRef;
 
-  public getText(): string {
-    return this.text.text;
+  @ViewChild('cards2')
+  private cards2: ElementRef;
+
+  public constructor(public dataService: DataService) {
   }
 
   public getUndoRedo(): UndoCollector {
@@ -53,15 +55,35 @@ export class AppComponent implements AfterViewInit {
   ngAfterViewInit(): void {
     const drawrect = new DrawRect(this.canvas.nativeElement);
     drawrect.setCoords(10, 10, 300, 300);
-    drawrect.doIt();
+    drawrect.execute();
+
+    // dragLockBinder()
+    //   .on(this.cards1.nativeElement)
+    //   .on(this.cards2.nativeElement)
+    //   .toProduce(i => {
+    //     const card = (i.getSrcObject() as Element).closest('mat-card');
+    //     const index = Array.prototype.indexOf.call(card.parentNode.children, card);
+    //     console.log(i.getTgtClientX() + ' ' + i.getTgtClientY());
+    //     const fromSrcToTgt = i.getTgtObject() === this.cards2.nativeElement && i.getSrcObject() !== this.cards1.nativeElement;
+    //     if (fromSrcToTgt) {
+    //       return new TransferArrayItem(this.dataService.cards1, this.dataService.cards2, index, 0);
+    //     }
+    //     return new TransferArrayItem(this.dataService.cards2, this.dataService.cards1, index, 0);
+    //   })
+    //   .when(i =>
+    //     (i.getSrcObject() as Element).closest('mat-card').parentNode === this.cards1.nativeElement ?
+    //     i.getTgtObject() === this.cards2.nativeElement : i.getTgtObject() === this.cards1.nativeElement)
+    //   // .log(LogLevel.binding)
+    //   .bind();
+
 
     buttonBinder()
       .on(this.clearButton.nativeElement)
-      .toProduce(() => new ClearText(this.text))
+      .toProduce(() => new ClearText(this.dataService))
       .bind();
 
     textInputBinder()
-      .toProduce(() => new SetText(this.text))
+      .toProduce(() => new SetText(this.dataService))
       .then((c, i) => c.text = i.getWidget().value)
       .on(this.textarea.nativeElement)
       .bind();

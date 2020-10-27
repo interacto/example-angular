@@ -1,0 +1,19 @@
+
+
+.cards {
+  width: 33%;
+  border: 1px solid rgba(0,0,0,.03);
+  display: inline-block;
+  max-width: 100%;
+  margin: 4px;
+  background-color:#578c9b;
+}
+
+.cards-block {
+  min-width: 33%;
+  min-height: 50px;
+  box-shadow: 0 2px 2px rgba(0,0,0,.24),0 0 2px rgba(0,0,0,.12);
+  margin: 20px auto;
+  width: 33%;
+  background-color: rgb(245,245,245);
+}

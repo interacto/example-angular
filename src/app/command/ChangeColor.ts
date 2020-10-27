@@ -1,6 +1,6 @@
-import {CommandImpl, Undoable} from 'interacto';
+import {CommandBase, Undoable} from 'interacto';
 
-export class ChangeColor extends CommandImpl implements Undoable {
+export class ChangeColor extends CommandBase implements Undoable {
   private mementoColor: string | undefined;
   private newColor: string;
 
@@ -12,7 +12,7 @@ export class ChangeColor extends CommandImpl implements Undoable {
     this.mementoColor = this.svgElt.getAttribute('fill');
   }
 
-  protected doCmdBody(): void {
+  protected execution(): void {
     // tslint:disable-next-line:no-bitwise
     this.newColor = '#' + (Math.random() * 0xFFFFFF << 0).toString(16);
     this.redo();
