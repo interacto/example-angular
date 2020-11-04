@@ -20,21 +20,6 @@ export class DrawRect extends CommandBase implements Undoable {
     this.rec.setAttribute('y', this.minY.toString());
     this.rec.setAttribute('height', (this.maxY - this.minY).toString());
     this.rec.setAttribute('width', (this.maxX - this.minX).toString());
-
-    // this.rec.addEventListener('touchend', evt => {
-    //   console.log('----');
-    //   for (let i = 0; i < evt.changedTouches.length; i++) {
-    //     console.log('touchended' + evt.changedTouches[i].identifier);
-    //   }
-    //   console.log('----');
-    // });
-    // this.rec.addEventListener('touchstart', evt => {
-    //   console.log('----');
-    //   for (let i = 0; i < evt.changedTouches.length; i++) {
-    //     console.log('touchstarted' + evt.changedTouches[i].identifier);
-    //   }
-    //   console.log('----');
-    // });
   }
 
   public setCoords(minX: number, minY: number, maxX: number, maxY: number): void {

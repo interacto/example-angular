@@ -25,19 +25,19 @@ import {
 })
 export class AppComponent implements AfterViewInit {
   @ViewChild('clearbutton')
-  private clearButton: ElementRef;
+  private clearButton: ElementRef<HTMLButtonElement>;
 
   @ViewChild('textfield')
-  private textarea: ElementRef;
+  private textarea: ElementRef<HTMLTextAreaElement>;
 
   @ViewChild('undo')
-  private undoButton: ElementRef;
+  private undoButton: ElementRef<HTMLButtonElement>;
 
   @ViewChild('redo')
-  private redoButton: ElementRef;
+  private redoButton: ElementRef<HTMLButtonElement>;
 
   @ViewChild('canvas')
-  private canvas: ElementRef;
+  private canvas: ElementRef<SVGSVGElement>;
 
   @ViewChild('cards1')
   private cards1: ElementRef;
