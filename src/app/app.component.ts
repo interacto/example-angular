@@ -6,17 +6,7 @@ import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {
-  buttonBinder,
-  longTouchBinder,
-  multiTouchBinder,
-  Redo,
-  swipeBinder,
-  tapBinder,
-  textInputBinder,
-  Undo,
-  UndoCollector
-} from 'interacto';
+import {buttonBinder, longTouchBinder, multiTouchBinder, Redo, swipeBinder, tapBinder, textInputBinder, Undo, UndoHistory} from 'interacto';
 
 @Component({
   selector: 'app-root',
@@ -48,8 +38,8 @@ export class AppComponent implements AfterViewInit {
   public constructor(public dataService: DataService) {
   }
 
-  public getUndoRedo(): UndoCollector {
-    return UndoCollector.getInstance();
+  public getUndoRedo(): UndoHistory {
+    return UndoHistory.getInstance();
   }
 
   ngAfterViewInit(): void {
@@ -58,8 +48,8 @@ export class AppComponent implements AfterViewInit {
     drawrect.execute();
 
     // dragLockBinder()
-    //   .on(this.cards1.nativeElement)
-    //   .on(this.cards2.nativeElement)
+    //   .on(this.cards1)
+    //   .on(this.cards2)
     //   .toProduce(i => {
     //     const card = (i.getSrcObject() as Element).closest('mat-card');
     //     const index = Array.prototype.indexOf.call(card.parentNode.children, card);
@@ -78,29 +68,29 @@ export class AppComponent implements AfterViewInit {
 
 
     buttonBinder()
-      .on(this.clearButton.nativeElement)
+      .on(this.clearButton)
       .toProduce(() => new ClearText(this.dataService))
       .bind();
 
     textInputBinder()
       .toProduce(() => new SetText(this.dataService))
       .then((c, i) => c.text = i.getWidget().value)
-      .on(this.textarea.nativeElement)
+      .on(this.textarea)
       .bind();
 
     buttonBinder()
       .toProduce(() => new Undo())
-      .on(this.undoButton.nativeElement)
+      .on(this.undoButton)
       .bind();
 
     buttonBinder()
       .toProduce(() => new Redo())
-      .on(this.redoButton.nativeElement)
+      .on(this.redoButton)
       .bind();
 
     longTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.getSrcObject() as SVGElement))
-      .onDynamic(this.canvas.nativeElement)
+      .onDynamic(this.canvas)
       .when(i => i.getSrcObject() !== this.canvas.nativeElement && i.getSrcObject() instanceof SVGElement)
       // Prevents the context menu to pop-up
       .preventDefault()
@@ -110,7 +100,7 @@ export class AppComponent implements AfterViewInit {
 
     tapBinder(3)
       .toProduce(i => new ChangeColor(i.getTapData()[0].getSrcObject() as SVGElement))
-      .onDynamic(this.canvas.nativeElement)
+      .onDynamic(this.canvas)
       .when(i => i.getTapData()[0].getSrcObject() !== this.canvas.nativeElement
         && i.getTapData()[0].getSrcObject() instanceof SVGElement)
       // Does not continue to run if the first targeted node is not an SVG element
@@ -121,7 +111,7 @@ export class AppComponent implements AfterViewInit {
 
     multiTouchBinder(2)
       .toProduce(i => new DrawRect(this.canvas.nativeElement as SVGSVGElement))
-      .on(this.canvas.nativeElement)
+      .on(this.canvas)
       .then((c, i) => {
         c.setCoords(Math.min(...i.getTouchData().map(touch => touch.getTgtClientX())) - boundary.x,
           Math.min(...i.getTouchData().map(touch => touch.getTgtClientY())) - boundary.y,
@@ -134,7 +124,7 @@ export class AppComponent implements AfterViewInit {
 
     swipeBinder(true, 300, 500, 50)
       .toProduce(i => new DeleteAll(this.canvas.nativeElement))
-      .on(this.canvas.nativeElement)
+      .on(this.canvas)
       .when(i => i.getSrcObject() === this.canvas.nativeElement)
       .preventDefault()
       .bind();
