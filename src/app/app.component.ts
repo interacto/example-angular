@@ -6,7 +6,19 @@ import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {buttonBinder, longTouchBinder, multiTouchBinder, Redo, swipeBinder, tapBinder, textInputBinder, Undo, UndoHistory} from 'interacto';
+import {
+  Interaction,
+  InteractionBinder,
+  longTouchBinder,
+  multiTouchBinder,
+  PointData,
+  swipeBinder,
+  tapBinder,
+  textInputBinder,
+  UndoHistory,
+  undoRedoBinder
+} from 'interacto';
+
 
 @Component({
   selector: 'app-root',
@@ -14,9 +26,6 @@ import {buttonBinder, longTouchBinder, multiTouchBinder, Redo, swipeBinder, tapB
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('clearbutton')
-  private clearButton: ElementRef<HTMLButtonElement>;
-
   @ViewChild('textfield')
   private textarea: ElementRef<HTMLTextAreaElement>;
 
@@ -35,11 +44,7 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('cards2')
   private cards2: ElementRef;
 
-  public constructor(public dataService: DataService) {
-  }
-
-  public getUndoRedo(): UndoHistory {
-    return UndoHistory.getInstance();
+  public constructor(public dataService: DataService, public undoHistory: UndoHistory) {
   }
 
   ngAfterViewInit(): void {
@@ -67,26 +72,14 @@ export class AppComponent implements AfterViewInit {
     //   .bind();
 
 
-    buttonBinder()
-      .on(this.clearButton)
-      .toProduce(() => new ClearText(this.dataService))
-      .bind();
-
     textInputBinder()
       .toProduce(() => new SetText(this.dataService))
       .then((c, i) => c.text = i.getWidget().value)
       .on(this.textarea)
       .bind();
 
-    buttonBinder()
-      .toProduce(() => new Undo())
-      .on(this.undoButton)
-      .bind();
-
-    buttonBinder()
-      .toProduce(() => new Redo())
-      .on(this.redoButton)
-      .bind();
+    // Shortcut for defining undo/redo bindings with buttons
+    undoRedoBinder(this.undoButton, this.redoButton);
 
     longTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.getSrcObject() as SVGElement))
@@ -127,6 +120,12 @@ export class AppComponent implements AfterViewInit {
       .on(this.canvas)
       .when(i => i.getSrcObject() === this.canvas.nativeElement)
       .preventDefault()
+      .bind();
+  }
+
+  clearClicksBinder(binder: InteractionBinder<Interaction<PointData>, PointData>): void {
+    binder
+      .toProduce(() => new ClearText(this.dataService))
       .bind();
   }
 }

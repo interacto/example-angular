@@ -1,15 +1,16 @@
 
-<button #undo [disabled]="this.getUndoRedo().getLastUndo() === undefined"
-[title]="this.getUndoRedo().getLastOrEmptyUndoMessage()">Undo</button>
-<button #redo [disabled]="this.getUndoRedo().getLastRedo() === undefined"
-[title]="this.getUndoRedo().getLastOrEmptyRedoMessage()">Redo</button>
+
+<button #undo [disabled]="this.undoHistory.getLastUndo() === undefined"
+[title]="this.undoHistory.getLastOrEmptyUndoMessage()">Undo</button>
+<button #redo [disabled]="this.undoHistory.getLastRedo() === undefined"
+[title]="this.undoHistory.getLastOrEmptyRedoMessage()">Redo</button>
 <br/><br/>
 
 
 
 <textarea #textfield rows="4" cols="50" value="{{dataService.txt}}"></textarea>
 <br/>
-<button #clearbutton>Clear text</button>
+<button [ioButton]="clearClicksBinder">Clear text</button>
 
 <br/><br/>
 

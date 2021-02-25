@@ -1,5 +1,10 @@
 import { TestBed, async } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {MatCardModule} from '@angular/material/card';
+import {MatButtonModule} from '@angular/material/button';
+import {DragDropModule} from '@angular/cdk/drag-drop';
+import {InteractoModule} from 'interacto-angular';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -7,6 +12,13 @@ describe('AppComponent', () => {
       declarations: [
         AppComponent
       ],
+      imports: [
+        BrowserModule,
+        MatCardModule,
+        MatButtonModule,
+        DragDropModule,
+        InteractoModule
+      ]
     }).compileComponents();
   }));
 

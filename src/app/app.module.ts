@@ -1,9 +1,10 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
+import {BrowserModule} from '@angular/platform-browser';
+import {NgModule} from '@angular/core';
+import {AppComponent} from './app.component';
 import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {DragDropModule} from '@angular/cdk/drag-drop';
+import {InteractoModule} from 'interacto-angular';
 
 @NgModule({
   declarations: [
@@ -13,7 +14,8 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
     BrowserModule,
     MatCardModule,
     MatButtonModule,
-    DragDropModule
+    DragDropModule,
+    InteractoModule
   ],
   providers: [],
   bootstrap: [AppComponent]
