@@ -1,23 +1,12 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
+import {SetText} from './command/SetText';
+import {DataService} from './service/data.service';
+import {Bindings, Interaction, InteractionBinder, PointData, UndoHistory} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
-import {SetText} from './command/SetText';
-import {DataService} from './service/data.service';
-import {
-  Interaction,
-  InteractionBinder,
-  longTouchBinder,
-  multiTouchBinder,
-  PointData,
-  swipeBinder,
-  tapBinder,
-  textInputBinder,
-  UndoHistory,
-  undoRedoBinder
-} from 'interacto';
 
 
 @Component({
@@ -44,7 +33,11 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('cards2')
   private cards2: ElementRef;
 
-  public constructor(public dataService: DataService, public undoHistory: UndoHistory) {
+  public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
+    // With Interacto-angular you can inject in components a Bindings single-instance that allows you
+    // to define binders and bindings in ngAfterViewInit.
+    // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject
+    // it most of the time since this.bindings.undoHistory returns the same instance).
   }
 
   ngAfterViewInit(): void {
@@ -72,57 +65,62 @@ export class AppComponent implements AfterViewInit {
     //   .bind();
 
 
-    textInputBinder()
+    this.bindings.textInputBinder()
       .toProduce(() => new SetText(this.dataService))
-      .then((c, i) => c.text = i.getWidget().value)
+      .then((c, i) => c.text = i.widget.value)
       .on(this.textarea)
       .bind();
 
     // Shortcut for defining undo/redo bindings with buttons
-    undoRedoBinder(this.undoButton, this.redoButton);
+    this.bindings.undoRedoBinder(this.undoButton, this.redoButton);
 
-    longTouchBinder(2000)
-      .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.getSrcObject() as SVGElement))
+    this.bindings.longTouchBinder(2000)
+      .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
       .onDynamic(this.canvas)
-      .when(i => i.getSrcObject() !== this.canvas.nativeElement && i.getSrcObject() instanceof SVGElement)
+      .when(i => i.currentTarget !== this.canvas.nativeElement && i.currentTarget instanceof SVGElement)
       // Prevents the context menu to pop-up
       .preventDefault()
       // Consumes the events before the multi-touch interaction and co use them
       .stopImmediatePropagation()
       .bind();
 
-    tapBinder(3)
-      .toProduce(i => new ChangeColor(i.getTapData()[0].getSrcObject() as SVGElement))
+    this.bindings.tapBinder(3)
+      .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement))
       .onDynamic(this.canvas)
-      .when(i => i.getTapData()[0].getSrcObject() !== this.canvas.nativeElement
-        && i.getTapData()[0].getSrcObject() instanceof SVGElement)
+      .when(i => i.taps[0].currentTarget !== this.canvas.nativeElement
+        && i.taps[0].currentTarget instanceof SVGElement)
       // Does not continue to run if the first targeted node is not an SVG element
       .strictStart()
       .bind();
 
     const boundary = this.canvas.nativeElement.getBoundingClientRect();
 
-    multiTouchBinder(2)
+    this.bindings.multiTouchBinder(2)
       .toProduce(i => new DrawRect(this.canvas.nativeElement as SVGSVGElement))
       .on(this.canvas)
       .then((c, i) => {
-        c.setCoords(Math.min(...i.getTouchData().map(touch => touch.getTgtClientX())) - boundary.x,
-          Math.min(...i.getTouchData().map(touch => touch.getTgtClientY())) - boundary.y,
-          Math.max(...i.getTouchData().map(touch => touch.getTgtClientX())) - boundary.x,
-          Math.max(...i.getTouchData().map(touch => touch.getTgtClientY())) - boundary.y);
+        c.setCoords(Math.min(...i.touches.map(touch => touch.tgt.clientX)) - boundary.x,
+          Math.min(...i.touches.map(touch => touch.tgt.clientY)) - boundary.y,
+          Math.max(...i.touches.map(touch => touch.tgt.clientX)) - boundary.x,
+          Math.max(...i.touches.map(touch => touch.tgt.clientY)) - boundary.y);
       })
       .continuousExecution()
       .preventDefault()
       .bind();
 
-    swipeBinder(true, 300, 500, 50)
+    this.bindings.swipeBinder(true, 300, 500, 50)
       .toProduce(i => new DeleteAll(this.canvas.nativeElement))
       .on(this.canvas)
-      .when(i => i.getSrcObject() === this.canvas.nativeElement)
+      .when(i => i.src.currentTarget === this.canvas.nativeElement)
       .preventDefault()
       .bind();
   }
 
+  // This method is called by the Interacto directive specified in the HTML document
+  // on the button used to clear the text.
+  // This shows the second way, more in the spirit of Angular, for using binders directly from
+  // HTML. This avoids the declaration of properties in the component class for accessing the
+  // widgets.
   clearClicksBinder(binder: InteractionBinder<Interaction<PointData>, PointData>): void {
     binder
       .toProduce(() => new ClearText(this.dataService))
