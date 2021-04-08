@@ -1,16 +1,13 @@
 
-
-<button #undo [disabled]="this.undoHistory.getLastUndo() === undefined"
-[title]="this.undoHistory.getLastOrEmptyUndoMessage()">Undo</button>
-<button #redo [disabled]="this.undoHistory.getLastRedo() === undefined"
-[title]="this.undoHistory.getLastOrEmptyRedoMessage()">Redo</button>
+<button ioUndo>Undo</button>
+<button ioRedo>Redo</button>
 <br/><br/>
 
 
 
-<textarea #textfield rows="4" cols="50" value="{{dataService.txt}}"></textarea>
+<textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
 <br/>
-<button [ioButton]="clearClicksBinder">Clear text</button>
+<button [ioWidget]="clearClicksBinder">Clear text</button>
 
 <br/><br/>
 
@@ -26,13 +23,6 @@
 </svg>
 
 <h2>Drags the card</h2>
-<!--<div class="cards-block"-->
-<!--     cdkDropList-->
-<!--     #cards1="cdkDropList"-->
-<!--     [cdkDropListData]="dataService.cards1"-->
-<!--     [cdkDropListConnectedTo]="[cards2]"-->
-<!--     (cdkDropListDropped)="drop($event)"-->
-<!--&gt;-->
 <div class="cards-block" #cards1>
     <mat-card *ngFor="let card of dataService.cards1" class="cards">
       <mat-card-header>
@@ -47,11 +37,6 @@
     </mat-card>
 </div>
 
-<!--  <div class="cards-block" cdkDropList-->
-<!--       #cards2="cdkDropList"-->
-<!--       [cdkDropListData]="dataService.cards2"-->
-<!--       [cdkDropListConnectedTo]="[cards1]"-->
-<!--       (cdkDropListDropped)="drop($event)">-->
 <div class="cards-block" #cards2>
     <mat-card *ngFor="let card of dataService.cards2" class="cards">
       <mat-card-header>

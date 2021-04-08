@@ -3,7 +3,7 @@ import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, Interaction, InteractionBinder, PointData, UndoHistory} from 'interacto';
+import {Bindings, Interaction, InteractionBinder, PartialPointsBinder, PartialTextInputBinder, PointData, UndoHistory} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
@@ -15,15 +15,6 @@ import {DeleteAll} from './command/DeleteAll';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements AfterViewInit {
-  @ViewChild('textfield')
-  private textarea: ElementRef<HTMLTextAreaElement>;
-
-  @ViewChild('undo')
-  private undoButton: ElementRef<HTMLButtonElement>;
-
-  @ViewChild('redo')
-  private redoButton: ElementRef<HTMLButtonElement>;
-
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
 
@@ -64,15 +55,6 @@ export class AppComponent implements AfterViewInit {
     //   // .log(LogLevel.binding)
     //   .bind();
 
-
-    this.bindings.textInputBinder()
-      .toProduce(() => new SetText(this.dataService))
-      .then((c, i) => c.text = i.widget.value)
-      .on(this.textarea)
-      .bind();
-
-    // Shortcut for defining undo/redo bindings with buttons
-    this.bindings.undoRedoBinder(this.undoButton, this.redoButton);
 
     this.bindings.longTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
@@ -121,9 +103,16 @@ export class AppComponent implements AfterViewInit {
   // This shows the second way, more in the spirit of Angular, for using binders directly from
   // HTML. This avoids the declaration of properties in the component class for accessing the
   // widgets.
-  clearClicksBinder(binder: InteractionBinder<Interaction<PointData>, PointData>): void {
+  clearClicksBinder(binder: PartialPointsBinder): void {
     binder
       .toProduce(() => new ClearText(this.dataService))
+      .bind();
+  }
+
+  writeTextBinder(binder: PartialTextInputBinder): void {
+    binder
+      .toProduce(() => new SetText(this.dataService))
+      .then((c, i) => c.text = i.widget.value)
       .bind();
   }
 }
