@@ -3,7 +3,16 @@ import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, Interaction, InteractionBinder, PartialPointsBinder, PartialTextInputBinder, PointData, UndoHistory} from 'interacto';
+import {
+  Bindings,
+  BindingsImpl,
+  Interaction,
+  InteractionBinder,
+  PartialPointsBinder,
+  PartialTextInputBinder,
+  PointData,
+  UndoHistory
+} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
@@ -17,12 +26,6 @@ import {DeleteAll} from './command/DeleteAll';
 export class AppComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
-
-  @ViewChild('cards1')
-  private cards1: ElementRef;
-
-  @ViewChild('cards2')
-  private cards2: ElementRef;
 
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
