@@ -3,16 +3,7 @@ import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {
-  Bindings,
-  BindingsImpl,
-  Interaction,
-  InteractionBinder,
-  PartialPointsBinder,
-  PartialTextInputBinder,
-  PointData,
-  UndoHistory
-} from 'interacto';
+import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
@@ -106,7 +97,7 @@ export class AppComponent implements AfterViewInit {
   // This shows the second way, more in the spirit of Angular, for using binders directly from
   // HTML. This avoids the declaration of properties in the component class for accessing the
   // widgets.
-  clearClicksBinder(binder: PartialPointsBinder): void {
+  clearClicksBinder(binder: PartialButtonBinder): void {
     binder
       .toProduce(() => new ClearText(this.dataService))
       .bind();
