@@ -1,5 +1,3 @@
-
-
 .cards {
   width: 33%;
   border: 1px solid rgba(0,0,0,.03);
@@ -16,4 +14,31 @@
   margin: 20px auto;
   width: 33%;
   background-color: rgb(245,245,245);
+}
+
+.history {
+  min-height: 100%;
+  width: 200px;
+  position: absolute;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  padding: 6px 0 16px 0;
+}
+
+.history h2 {
+  font-size: 25px;
+  padding-left: 30px;
+}
+
+.history button {
+  margin-left: 30px;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+.main {
+  margin-left: 200px;
+  padding: 0 10px;
 }
