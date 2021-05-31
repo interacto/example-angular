@@ -1,77 +1,79 @@
-<div class="history">
-  <h2>History</h2>
+<div #page>
+  <div class="history">
+    <h2>History</h2>
 
-  <button #baseStateButton>Start</button>
-  <ng-container  *ngIf="undoHistory.getUndo().length === 0">&larr;</ng-container>
-  <br/>
+    <button #baseStateButton>Start</button>
+    <ng-container  *ngIf="undoHistory.getUndo().length === 0">&larr;</ng-container>
+    <br/>
 
-  <div #undoButtonContainer>
-    <ng-container *ngFor="let undoable of undoHistory.getUndo(); index as i">
-      <button #undobuttons>{{undoable.getUndoName()}}</button>
-      <ng-container  *ngIf="undoable == undoHistory.getLastUndo()">&larr;</ng-container>
-      <br/>
-    </ng-container>
+    <div #undoButtonContainer>
+      <ng-container *ngFor="let undoable of undoHistory.getUndo(); index as i">
+        <button #undobuttons>{{undoable.getUndoName()}}</button>
+        <ng-container  *ngIf="undoable == undoHistory.getLastUndo()">&larr;</ng-container>
+        <br/>
+      </ng-container>
+    </div>
+
+    <div #redoButtonContainer>
+      <ng-container *ngFor="let undoable of undoHistory.getRedo(); index as i">
+        <button #redobuttons>{{undoHistory.getRedo()[undoHistory.getRedo().length - i - 1].getUndoName()}}</button>
+        <br/>
+      </ng-container>
+    </div>
   </div>
 
-  <div #redoButtonContainer>
-    <ng-container *ngFor="let undoable of undoHistory.getRedo(); index as i">
-      <button #redobuttons>{{undoHistory.getRedo()[undoHistory.getRedo().length - i - 1].getUndoName()}}</button>
-      <br/>
-    </ng-container>
+  <div class="main" #main>
+    <button ioUndo>Undo</button>
+    <button ioRedo>Redo</button>
+    <br/><br/>
+
+    <textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
+    <br/>
+    <button [ioWidget]="clearClicksBinder">Clear text</button>
+
+    <br/><br/>
+
+    <p>
+      Multi-touch (two touches) creates a rectangle.<br/>
+      Three taps changes the color of the targeted rectangle.<br/>
+      A long touch (2 seconds) removes the targeted rectangle.<br/>
+      Swipe horizontally to clear all the SVG shapes.<br/>
+    </p>
+    <br/>
+
+    <svg #canvas width="1000" height="600" style="border:1px solid black;">
+    </svg>
+
+    <h2>Drag the cards</h2>
+    <div class="cards-block" #cards1>
+      <mat-card *ngFor="let card of dataService.cards1" class="cards">
+        <mat-card-header>
+          <mat-card-title>{{card.title}}</mat-card-title>
+          <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            {{card.text}}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <div class="cards-block" #cards2>
+      <mat-card *ngFor="let card of dataService.cards2" class="cards">
+        <mat-card-header>
+          <mat-card-title>{{card.title}}</mat-card-title>
+          <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <p>
+            {{card.text}}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
   </div>
 </div>
 
-<div class="main">
-  <button ioUndo>Undo</button>
-  <button ioRedo>Redo</button>
-  <br/><br/>
-
-  <textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
-  <br/>
-  <button [ioWidget]="clearClicksBinder">Clear text</button>
-
-  <br/><br/>
-
-  <p>
-    Multi-touch (two touches) creates a rectangle.<br/>
-    Three taps changes the color of the targeted rectangle.<br/>
-    A long touch (2 seconds) removes the targeted rectangle.<br/>
-    Swipe horizontally to clear all the SVG shapes.<br/>
-  </p>
-  <br/>
-
-  <svg #canvas width="1000" height="600" style="border:1px solid black;">
-  </svg>
-
-  <!--<h2>Drags the card</h2>-->
-  <!--<div class="cards-block" #cards1>-->
-  <!--    <mat-card *ngFor="let card of dataService.cards1" class="cards">-->
-  <!--      <mat-card-header>-->
-  <!--        <mat-card-title>{{card.title}}</mat-card-title>-->
-  <!--        <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>-->
-  <!--      </mat-card-header>-->
-  <!--      <mat-card-content>-->
-  <!--        <p>-->
-  <!--          {{card.text}}-->
-  <!--        </p>-->
-  <!--      </mat-card-content>-->
-  <!--    </mat-card>-->
-  <!--</div>-->
-
-  <!--<div class="cards-block" #cards2>-->
-  <!--    <mat-card *ngFor="let card of dataService.cards2" class="cards">-->
-  <!--      <mat-card-header>-->
-  <!--        <mat-card-title>{{card.title}}</mat-card-title>-->
-  <!--        <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>-->
-  <!--      </mat-card-header>-->
-  <!--      <mat-card-content>-->
-  <!--        <p>-->
-  <!--          {{card.text}}-->
-  <!--        </p>-->
-  <!--      </mat-card-content>-->
-  <!--    </mat-card>-->
-  <!--</div>-->
-
-</div>
 
 

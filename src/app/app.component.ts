@@ -3,19 +3,15 @@ import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {
-  Bindings,
-  PartialButtonBinder,
-  PartialTextInputBinder,
-  UndoHistory
-} from 'interacto';
+import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
-import {ClicksDirectiveData} from 'interacto-angular';
 import {HistoryGoBack} from './command/HistoryGoBack';
 import {HistoryGoForward} from './command/HistoryGoForward';
 import {HistoryBackToStart} from './command/HistoryBackToStart';
+import {TransferArrayItem} from './command/TransferArrayItem';
+import {MoveCard} from './command/MoveCard';
 
 @Component({
   selector: 'app-root',
@@ -41,7 +37,14 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('baseStateButton')
   public baseStateButton: HTMLButtonElement;
 
-  public a: ClicksDirectiveData = {count : 2, fn : 'test'};
+  @ViewChild('cards1')
+  public cards1: ElementRef<HTMLDivElement>;
+
+  @ViewChild('cards2')
+  public cards2: ElementRef<HTMLDivElement>;
+
+  @ViewChild('main')
+  public main: ElementRef<HTMLDivElement>;
 
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
@@ -55,25 +58,59 @@ export class AppComponent implements AfterViewInit {
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
 
-    // dragLockBinder()
-    //   .on(this.cards1)
-    //   .on(this.cards2)
-    //   .toProduce(i => {
-    //     const card = (i.getSrcObject() as Element).closest('mat-card');
-    //     const index = Array.prototype.indexOf.call(card.parentNode.children, card);
-    //     console.log(i.getTgtClientX() + ' ' + i.getTgtClientY());
-    //     const fromSrcToTgt = i.getTgtObject() === this.cards2.nativeElement && i.getSrcObject() !== this.cards1.nativeElement;
-    //     if (fromSrcToTgt) {
-    //       return new TransferArrayItem(this.dataService.cards1, this.dataService.cards2, index, 0);
-    //     }
-    //     return new TransferArrayItem(this.dataService.cards2, this.dataService.cards1, index, 0);
-    //   })
-    //   .when(i =>
-    //     (i.getSrcObject() as Element).closest('mat-card').parentNode === this.cards1.nativeElement ?
-    //     i.getTgtObject() === this.cards2.nativeElement : i.getTgtObject() === this.cards1.nativeElement)
-    //   // .log(LogLevel.binding)
-    //   .bind();
+    // This binder setups the command that allows the user to move a card from one list to another
+    this.bindings.dndBinder(true)
+      .on(window.document.body)
+      .toProduce(i => {
+        const card = (i.src.target as Element).closest('mat-card');
+        const index = Array.prototype.indexOf.call(card.parentNode.children, card);
+        const fromSrcToTgt = i.tgt.target === this.cards2.nativeElement && i.src.target !== this.cards1.nativeElement;
+        if (fromSrcToTgt) {
+          return new TransferArrayItem(this.dataService.cards1, this.dataService.cards2, index, 0, 'Drag card');
+        }
+        return new TransferArrayItem(this.dataService.cards2, this.dataService.cards1, index, 0, 'Drag card');
+      })
+      // Checks if the user picked a valid card, and a new list for the card as a destination
+      .when(i => {
+        const card = (i.src.target as Element).closest('mat-card');
+        return (card !== null && (card.parentNode === this.cards1.nativeElement ?
+        i.tgt.target === this.cards2.nativeElement : i.tgt.target === this.cards1.nativeElement));
+      })
+      // .log(LogLevel.binding)
+      .bind();
 
+    // This binder setups the command that makes the cards move visually on screen
+    this.bindings.dndBinder(true)
+      .on(window.document.body) // The card is allowed to be dragged anywhere on the page
+      .toProduce(i => {
+        const card = (i.src.target as Element).closest('mat-card') as HTMLElement;
+        return new MoveCard(card);
+      })
+      .first((c) => {
+        c.mementoCardCount = this.dataService.cards1.length;
+      })
+      .then((c, i) => {
+        let x = i.tgt.pageX;
+        let y = i.tgt.pageY;
+        // Prevents parts of the card from going outside of the document
+        if (i.tgt.pageX > window.document.body.clientWidth - c.card.clientWidth) {
+          x = x - c.card.clientWidth - 5;
+        }
+        if (i.tgt.pageY > window.document.body.clientHeight - c.card.clientHeight) {
+          y = y - c.card.clientHeight - 5;
+        }
+        c.setX(String(x) + 'px');
+        c.setY(String(y) + 'px');
+      })
+      .continuousExecution()
+      // Checks that the user has selected a valid card
+      .when(i => (i.src.target as Element).closest('mat-card') !== null)
+      // Resets the card's position if the data was not modified by the operation
+      .end((c) => {
+        if ((this.dataService.cards1.length === c.mementoCardCount)) {
+          c.resetPosition();
+       }})
+      .bind();
 
     this.bindings.longTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
