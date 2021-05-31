@@ -1,38 +1,43 @@
-<div #page>
+<div class="page">
+  <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css?family=Josefin+Sans">
+
   <div class="history">
-    <h2>History</h2>
-
-    <button #baseStateButton>Start</button>
-    <ng-container  *ngIf="undoHistory.getUndo().length === 0">&larr;</ng-container>
-    <br/>
-
-    <div #undoButtonContainer>
-      <ng-container *ngFor="let undoable of undoHistory.getUndo(); index as i">
-        <button #undobuttons>{{undoable.getUndoName()}}</button>
-        <ng-container  *ngIf="undoable == undoHistory.getLastUndo()">&larr;</ng-container>
-        <br/>
-      </ng-container>
+    <div class="header">
+      <h2>HISTORY</h2>
+      <button ioUndo class="button-undo-redo">UNDO</button>
+      <button ioRedo class="button-undo-redo">REDO</button>
     </div>
 
-    <div #redoButtonContainer>
-      <ng-container *ngFor="let undoable of undoHistory.getRedo(); index as i">
-        <button #redobuttons>{{undoHistory.getRedo()[undoHistory.getRedo().length - i - 1].getUndoName()}}</button>
-        <br/>
-      </ng-container>
+    <div class = "buttons">
+      <button #baseStateButton class="history-button-active">Start</button>
+
+      <div #undoButtonContainer>
+        <ng-container *ngFor="let undoable of undoHistory.getUndo(); index as i">
+          <button #undobuttons class="history-button-active">{{undoable.getUndoName()}}</button>
+          <br/>
+        </ng-container>
+      </div>
+
+      <div #redoButtonContainer>
+        <ng-container *ngFor="let undoable of undoHistory.getRedo(); index as i">
+          <button #redobuttons class="history-button-inactive">{{undoHistory.getRedo()[undoHistory.getRedo().length - i - 1].getUndoName()}}</button>
+          <br/>
+        </ng-container>
+      </div>
     </div>
-  </div>
+    </div>
 
   <div class="main" #main>
-    <button ioUndo>Undo</button>
-    <button ioRedo>Redo</button>
-    <br/><br/>
-
+    <h1>An Interacto-Angular app</h1>
+    <h2>Type some text</h2>
     <textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
     <br/>
     <button [ioWidget]="clearClicksBinder">Clear text</button>
 
     <br/><br/>
 
+    <h2>Create and edit rectangles</h2>
     <p>
       Multi-touch (two touches) creates a rectangle.<br/>
       Three taps changes the color of the targeted rectangle.<br/>
@@ -74,6 +79,4 @@
     </div>
   </div>
 </div>
-
-
 
