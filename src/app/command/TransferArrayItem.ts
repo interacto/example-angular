@@ -1,16 +1,17 @@
 import {CommandBase, Undoable} from 'interacto';
 
 export class TransferArrayItem<T> extends CommandBase implements Undoable {
-  constructor(private srcArray: Array<T>,
-              private tgtArray: Array<T>,
-              private srcIndex: number,
-              private tgtIndex: number,
+  constructor(public srcArray: Array<T>,
+              public tgtArray: Array<T>,
+              public srcIndex: number,
+              public tgtIndex: number,
               private cmdName: string) {
     super();
   }
 
   protected execution(): void {
     this.redo();
+    console.log('ex');
   }
 
   public canExecute(): boolean {
