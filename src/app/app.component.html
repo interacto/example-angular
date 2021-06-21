@@ -38,54 +38,57 @@
     </div>
 
   <div class="main">
-
     <h1>An Interacto-Angular app</h1>
-    <h2>Type some text</h2>
-    <textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
-    <br/>
-    <button [ioWidget]="clearClicksBinder" class="clearTextButton">Clear text</button>
-    <br/><br/>
 
-    <h2>Create and edit rectangles</h2>
-    <p>
-      Multi-touch (two touches) creates a rectangle.<br/>
-      Three taps changes the color of the targeted rectangle.<br/>
-      A long touch (2 seconds) removes the targeted rectangle.<br/>
-      Swipe horizontally to clear all the SVG shapes.<br/>
-    </p>
-    <br/>
+    <app-tabs>
+      <app-tab tabTitle="Type some text">
+        <textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
+        <br/>
+        <button [ioWidget]="clearClicksBinder" class="clearTextButton">Clear text</button>
+        <br/><br/>
+      </app-tab>
+      <app-tab tabTitle="Create and edit rectangles">
+        <p>
+          Multi-touch (two touches) creates a rectangle.<br/>
+          Three taps changes the color of the targeted rectangle.<br/>
+          A long touch (2 seconds) removes the targeted rectangle.<br/>
+          Swipe horizontally to clear all the SVG shapes.<br/>
+        </p>
+        <br/>
 
-    <svg #canvas width="1000" height="600" style="border:1px solid black;">
-    </svg>
+        <svg #canvas width="1000" height="600" style="border:1px solid black;">
+        </svg>
+      </app-tab>
+      <app-tab tabTitle="Drag the cards">
+        <div class="cards-block" #cards1>
+          <mat-card *ngFor="let card of dataService.cards1" class="cards">
+            <mat-card-header>
+              <mat-card-title>{{card.title}}</mat-card-title>
+              <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                {{card.text}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
 
-    <h2>Drag the cards</h2>
-    <div class="cards-block" #cards1>
-      <mat-card *ngFor="let card of dataService.cards1" class="cards">
-        <mat-card-header>
-          <mat-card-title>{{card.title}}</mat-card-title>
-          <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>
-            {{card.text}}
-          </p>
-        </mat-card-content>
-      </mat-card>
-    </div>
-
-    <div class="cards-block" #cards2>
-      <mat-card *ngFor="let card of dataService.cards2" class="cards">
-        <mat-card-header>
-          <mat-card-title>{{card.title}}</mat-card-title>
-          <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
-        </mat-card-header>
-        <mat-card-content>
-          <p>
-            {{card.text}}
-          </p>
-        </mat-card-content>
-      </mat-card>
-    </div>
+        <div class="cards-block" #cards2>
+          <mat-card *ngFor="let card of dataService.cards2" class="cards">
+            <mat-card-header>
+              <mat-card-title>{{card.title}}</mat-card-title>
+              <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
+            </mat-card-header>
+            <mat-card-content>
+              <p>
+                {{card.text}}
+              </p>
+            </mat-card-content>
+          </mat-card>
+        </div>
+      </app-tab>
+    </app-tabs>
   </div>
 </div>
 

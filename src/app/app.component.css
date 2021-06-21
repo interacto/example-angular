@@ -2,6 +2,12 @@
   font-family: 'Josefin Sans', sans-serif;
 }
 
+h1 {
+  text-align: center;
+  min-height: 30px;
+  width: calc(100vw - (220px));
+}
+
 .history {
   max-height:100vh;
   min-height:100vh;
@@ -83,8 +89,10 @@
 }
 
 .main {
-  margin-left: 200px;
-  padding: 0 20px;
+  position: absolute;
+  left: 220px;
+  top: 0;
+  right: 20px;
 }
 
 .main button {

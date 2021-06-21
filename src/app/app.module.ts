@@ -5,10 +5,14 @@ import {MatCardModule} from '@angular/material/card';
 import {MatButtonModule} from '@angular/material/button';
 import {DragDropModule} from '@angular/cdk/drag-drop';
 import {InteractoModule} from 'interacto-angular';
+import { TabsComponent } from './tabs/tabs.component';
+import { TabComponent } from './tab/tab.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    TabsComponent,
+    TabComponent
   ],
   imports: [
     BrowserModule,

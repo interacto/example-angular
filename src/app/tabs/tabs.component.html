@@ -1,0 +1,7 @@
+<ul class="tab-bar">
+  <li *ngFor="let tab of tabs">
+    <button *ngIf="!tab.active" (click)="selectTab(tab)" class="inactive-tab">{{tab.tabTitle}}</button>
+    <button *ngIf="tab.active" (click)="selectTab(tab)" class="active-tab">{{tab.tabTitle}}</button>
+  </li>
+</ul>
+<ng-content></ng-content>
