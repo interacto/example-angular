@@ -160,12 +160,11 @@ export class AppComponent implements AfterViewInit {
       .strictStart()
       .bind();
 
-    const boundary = this.canvas.nativeElement.getBoundingClientRect();
-
     this.bindings.multiTouchBinder(2)
       .toProduce(() => new DrawRect(this.canvas.nativeElement as SVGSVGElement))
       .on(this.canvas)
       .then((c, i) => {
+        const boundary = this.canvas.nativeElement.getBoundingClientRect();
         c.setCoords(Math.min(...i.touches.map(touch => touch.tgt.clientX)) - boundary.x,
           Math.min(...i.touches.map(touch => touch.tgt.clientY)) - boundary.y,
           Math.max(...i.touches.map(touch => touch.tgt.clientX)) - boundary.x,
