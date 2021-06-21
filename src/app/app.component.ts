@@ -3,14 +3,16 @@ import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
+import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory, TransferArrayItem} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
 import {HistoryGoBack} from './command/HistoryGoBack';
 import {HistoryGoForward} from './command/HistoryGoForward';
 import {HistoryBackToStart} from './command/HistoryBackToStart';
-import {TransferArrayItem} from './command/TransferArrayItem';
+import {DisplayPreview} from './command/DisplayPreview';
+import {HidePreview} from './command/HidePreview';
+import {MovePreview} from './command/MovePreview';
 
 @Component({
   selector: 'app-root',
@@ -42,6 +44,9 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('cards2')
   public cards2: ElementRef<HTMLDivElement>;
 
+  @ViewChild('preview')
+  public preview: ElementRef<HTMLDivElement>;
+
   // For the card drag-and-drop
   public mementoX: string;
   public mementoY: string;
@@ -60,6 +65,8 @@ export class AppComponent implements AfterViewInit {
     const drawrect = new DrawRect(this.canvas.nativeElement);
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
+
+    this.preview.nativeElement.style.display = 'none';
 
     // This binder creates the command that allows the user to move a card from one list to another
     this.bindings.dndBinder(true)
@@ -184,11 +191,47 @@ export class AppComponent implements AfterViewInit {
       .onDynamic(this.undoButtonContainer)
       // The native elements have to be retrieved from the child list since this list contains ElementRefs
       .toProduce(i => new HistoryGoBack(this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget), this.undoHistory))
+      // .then((i, c) => console.log('hey'))
       .bind();
 
     this.bindings.buttonBinder()
       .onDynamic(this.redoButtonContainer)
       .toProduce(i => new HistoryGoForward(this.redoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget), this.undoHistory))
+      .bind();
+
+    // Command previews
+
+    // Displays command previews for undo buttons
+    this.bindings.mouseoverBinder(false)
+      .onDynamic(this.undoButtonContainer)
+      .toProduce(i => new DisplayPreview(
+        this.undoHistory.getUndo()[this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.target as HTMLButtonElement)],
+        this.preview.nativeElement))
+      .bind();
+
+    // Displays command previews for redo buttons
+    this.bindings.mouseoverBinder(false)
+      .onDynamic(this.redoButtonContainer)
+      .toProduce(i => new DisplayPreview(
+        this.undoHistory.getRedo()[
+          this.undoHistory.getRedo().length
+          - this.redoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.target as HTMLButtonElement)
+          - 1],
+        this.preview.nativeElement))
+      .bind();
+
+    // Hides command previews for undo and redo buttons
+    this.bindings.mouseoutBinder(false)
+      .onDynamic(this.undoButtonContainer)
+      .onDynamic(this.redoButtonContainer)
+      .toProduce(() => new HidePreview(this.preview.nativeElement))
+      .bind();
+
+    // Moves command previews to the mouse's position for undo and redo buttons
+    this.bindings.mousemoveBinder()
+      .onDynamic(this.undoButtonContainer)
+      .onDynamic(this.redoButtonContainer)
+      .toProduce(i => new MovePreview(this.preview.nativeElement, i.pageX, i.pageY))
       .bind();
   }
 

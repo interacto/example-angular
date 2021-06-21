@@ -1,6 +1,6 @@
-import {CommandBase, Undoable} from 'interacto';
+import {UndoableCommand} from 'interacto';
 
-export class DrawRect extends CommandBase implements Undoable {
+export class DrawRect extends UndoableCommand {
   private rec: SVGRectElement;
   private minX: number;
   private minY: number;
@@ -39,5 +39,9 @@ export class DrawRect extends CommandBase implements Undoable {
 
   public getUndoName(): string {
     return 'Draw Rectangle';
+  }
+
+  public getVisualSnapshot(): SVGElement | string | undefined {
+    return this.rec;
   }
 }

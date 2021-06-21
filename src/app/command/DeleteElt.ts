@@ -1,6 +1,6 @@
-import {CommandBase, Undoable} from 'interacto';
+import {UndoableCommand} from 'interacto';
 
-export class DeleteElt extends CommandBase implements Undoable {
+export class DeleteElt extends UndoableCommand {
 
   public constructor(private readonly svgDoc: SVGSVGElement, private readonly svgElt: SVGElement) {
     super();

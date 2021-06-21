@@ -1,7 +1,7 @@
-import {CommandBase, Undoable} from 'interacto';
+import {UndoableCommand} from 'interacto';
 import {DataService} from '../service/data.service';
 
-export class SetText extends CommandBase implements Undoable {
+export class SetText extends UndoableCommand {
     private memento: string;
 
     public constructor(private data: DataService, private newText?: string) {
@@ -34,5 +34,9 @@ export class SetText extends CommandBase implements Undoable {
 
     public getUndoName(): string {
         return 'Set text';
+    }
+
+    public getVisualSnapshot(): SVGElement | string | undefined {
+      return this.newText;
     }
 }

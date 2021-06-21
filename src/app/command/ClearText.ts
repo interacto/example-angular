@@ -1,8 +1,7 @@
 import {DataService} from '../service/data.service';
-import {CommandBase, Undoable} from 'interacto';
+import {UndoableCommand} from 'interacto';
 
-
-export class ClearText extends CommandBase implements Undoable {
+export class ClearText extends UndoableCommand {
     private memento: string;
 
     public constructor(private data: DataService) {

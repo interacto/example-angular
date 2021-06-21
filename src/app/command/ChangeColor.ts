@@ -1,6 +1,6 @@
-import {CommandBase, Undoable} from 'interacto';
+import {UndoableCommand} from 'interacto';
 
-export class ChangeColor extends CommandBase implements Undoable {
+export class ChangeColor extends UndoableCommand {
   private mementoColor: string | undefined;
   private newColor: string;
 
@@ -28,5 +28,15 @@ export class ChangeColor extends CommandBase implements Undoable {
 
   public getUndoName(): string {
     return 'Change color';
+  }
+
+  /**
+   * Returns a copy of the shape with its new color as a snapshot.
+   */
+  public getVisualSnapshot(): SVGElement | string | undefined {
+    const rec = this.svgElt.cloneNode() as SVGElement;
+    rec.setAttribute('fill', this.newColor);
+    rec.setAttribute('left', '0');
+    return rec;
   }
 }

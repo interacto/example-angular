@@ -120,3 +120,19 @@
   width: 33%;
   background-color: #d6d6d6;
 }
+
+.preview {
+  min-height: 30px;
+  min-width: 100px;
+  background-color: white;
+  position: absolute;
+  z-index: 999;
+  padding: 10px;
+  border-style: solid;
+  border-width: medium;
+}
+
+.preview-canvas {
+  height: 70px;
+  width: 70px;
+}
