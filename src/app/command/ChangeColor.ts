@@ -34,9 +34,11 @@ export class ChangeColor extends UndoableCommand {
    * Returns a copy of the shape with its new color as a snapshot.
    */
   public getVisualSnapshot(): SVGElement | string | undefined {
-    const rec = this.svgElt.cloneNode() as SVGElement;
-    rec.setAttribute('fill', this.newColor);
-    rec.setAttribute('left', '0');
-    return rec;
+    const elt = this.svgElt.cloneNode() as SVGElement;
+    elt.setAttribute('fill', this.newColor);
+    elt.setAttribute('left', '0');
+    elt.setAttribute('x', '0');
+    elt.setAttribute('y', '0');
+    return elt;
   }
 }

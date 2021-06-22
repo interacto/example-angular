@@ -42,6 +42,10 @@ export class DrawRect extends UndoableCommand {
   }
 
   public getVisualSnapshot(): SVGElement | string | undefined {
-    return this.rec;
+    const elt = this.rec.cloneNode() as SVGElement;
+    elt.setAttribute('left', '0');
+    elt.setAttribute('x', '0');
+    elt.setAttribute('y', '0');
+    return elt;
   }
 }
