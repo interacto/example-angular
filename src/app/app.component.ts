@@ -95,16 +95,17 @@ export class AppComponent implements AfterViewInit {
         this.card.style.zIndex = '999';
       })
       .then((c, i) => {
-        // Retrieves the position of the mouse on the page
-        let x = i.tgt.pageX;
+        // Retrieves the position of the mouse on the page (substract the sidebar size)
+        let x = i.tgt.pageX - 220;
         let y = i.tgt.pageY;
         // Prevents parts of the card from going outside of the document
-        if (i.tgt.pageX > window.document.body.clientWidth - this.card.clientWidth) {
+        if (i.tgt.pageX > window.innerWidth - this.card.clientWidth - 10) {
           x = x - this.card.clientWidth - 5;
         }
-        if (i.tgt.pageY > window.document.body.clientHeight - this.card.clientHeight) {
+        if (i.tgt.pageY > window.innerHeight - this.card.clientHeight - 15) {
           y = y - this.card.clientHeight - 5;
         }
+
         // Moves the card visually
         this.card.style.left = String(x) + 'px';
         this.card.style.top = String(y) + 'px';
