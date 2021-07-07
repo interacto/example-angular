@@ -3,7 +3,7 @@ import {ClearText} from './command/ClearText';
 import {DrawRect} from './command/DrawRect';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory, TransferArrayItem} from 'interacto';
+import {Bindings, isUndoableType, LogLevel, PartialButtonBinder, PartialTextInputBinder, TransferArrayItem, UndoHistory} from 'interacto';
 import {DeleteElt} from './command/DeleteElt';
 import {ChangeColor} from './command/ChangeColor';
 import {DeleteAll} from './command/DeleteAll';
@@ -13,6 +13,7 @@ import {HistoryBackToStart} from './command/HistoryBackToStart';
 import {DisplayPreview} from './command/DisplayPreview';
 import {HidePreview} from './command/HidePreview';
 import {MovePreview} from './command/MovePreview';
+import {MoveRect} from './command/MoveRect';
 
 @Component({
   selector: 'app-root',
@@ -140,6 +141,16 @@ export class AppComponent implements AfterViewInit {
         this.card.style.top = this.mementoY;
         this.card.style.position = this.mementoCSSPosition;
       })
+      .bind();
+
+    this.bindings.dndBinder(true)
+      .onDynamic(this.canvas)
+      .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
+      .then((c, i) => {
+        c.vectorX = i.tgt.clientX - i.src.clientX;
+        c.vectorY = i.tgt.clientY - i.src.clientY;
+      })
+      .continuousExecution()
       .bind();
 
     this.bindings.longTouchBinder(2000)
