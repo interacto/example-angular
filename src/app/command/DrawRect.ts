@@ -20,6 +20,7 @@ export class DrawRect extends UndoableCommand {
     this.rec.setAttribute('y', this.minY.toString());
     this.rec.setAttribute('height', (this.maxY - this.minY).toString());
     this.rec.setAttribute('width', (this.maxX - this.minX).toString());
+    this.rec.setAttribute('tabindex', '0');
   }
 
   public setCoords(minX: number, minY: number, maxX: number, maxY: number): void {
