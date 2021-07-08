@@ -1,0 +1,27 @@
+<div class="cards-block" #cards1>
+  <mat-card *ngFor="let card of dataService.cards1" class="cards">
+    <mat-card-header>
+      <mat-card-title>{{card.title}}</mat-card-title>
+      <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        {{card.text}}
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>
+
+<div class="cards-block" #cards2>
+  <mat-card *ngFor="let card of dataService.cards2" class="cards">
+    <mat-card-header>
+      <mat-card-title>{{card.title}}</mat-card-title>
+      <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
+    </mat-card-header>
+    <mat-card-content>
+      <p>
+        {{card.text}}
+      </p>
+    </mat-card-content>
+  </mat-card>
+</div>

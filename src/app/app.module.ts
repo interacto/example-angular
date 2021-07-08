@@ -7,12 +7,18 @@ import {DragDropModule} from '@angular/cdk/drag-drop';
 import {InteractoModule} from 'interacto-angular';
 import { TabsComponent } from './tabs/tabs.component';
 import { TabComponent } from './tab/tab.component';
+import { TabTextComponent } from './tab-text/tab-text.component';
+import { TabShapesComponent } from './tab-shapes/tab-shapes.component';
+import { TabCardsComponent } from './tab-cards/tab-cards.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     TabsComponent,
-    TabComponent
+    TabComponent,
+    TabTextComponent,
+    TabShapesComponent,
+    TabCardsComponent
   ],
   imports: [
     BrowserModule,
