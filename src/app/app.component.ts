@@ -2,10 +2,7 @@ import {AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren
 import {ClearText} from './command/ClearText';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
-import {HistoryGoBack} from './command/HistoryGoBack';
-import {HistoryGoForward} from './command/HistoryGoForward';
-import {HistoryBackToStart} from './command/HistoryBackToStart';
+import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, RedoNTimes, UndoHistory, UndoNTimes} from 'interacto';
 import {DisplayPreview} from './command/DisplayPreview';
 import {HidePreview} from './command/HidePreview';
 import {MovePreview} from './command/MovePreview';
@@ -39,6 +36,11 @@ export class AppComponent implements AfterViewInit {
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject
     // it most of the time since this.bindings.undoHistory returns the same instance).
+
+    // If the server address is not set to undefined, Interacto will try to send usage and error logs to the back-end
+    // See an example of such a back-end at https://github.com/interacto/logger-backend
+    // Here the address is configured by a proxy
+    this.bindings.logger.serverAddress = '';
   }
 
   ngAfterViewInit(): void {
@@ -46,19 +48,21 @@ export class AppComponent implements AfterViewInit {
 
     this.bindings.buttonBinder()
       .on(this.baseStateButton)
-      .toProduce(() => new HistoryBackToStart(this.undoHistory))
+      .toProduce(() => new UndoNTimes(this.undoHistory, this.undoHistory.getUndo().length))
+      .log(LogLevel.usage) // Usage logs are automatically sent to the back-end for this binding
       .bind();
 
     this.bindings.buttonBinder()
       .onDynamic(this.undoButtonContainer)
-      // The native elements have to be retrieved from the child list since this list contains ElementRefs
-      .toProduce(i => new HistoryGoBack(this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget), this.undoHistory))
-      // .then((i, c) => console.log('hey'))
+      .toProduce(i => new UndoNTimes(
+                this.undoHistory,
+                // The native elements have to be retrieved from the child list since this list contains ElementRefs
+  this.undoButtons.toArray().length - this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget) - 1))
       .bind();
 
     this.bindings.buttonBinder()
       .onDynamic(this.redoButtonContainer)
-      .toProduce(i => new HistoryGoForward(this.redoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget), this.undoHistory))
+      .toProduce(i => new RedoNTimes(this.undoHistory, this.redoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget) + 1))
       .bind();
 
     // Command previews

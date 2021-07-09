@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {Bindings, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
+import {Component, OnInit} from '@angular/core';
+import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
@@ -30,6 +30,7 @@ export class TabTextComponent implements OnInit {
   clearClicksBinder(binder: PartialButtonBinder): void {
     binder
       .toProduce(() => new ClearText(this.dataService))
+      .log(LogLevel.usage) // Usage logs are automatically sent to the back-end for this binding
       .bind();
   }
 
