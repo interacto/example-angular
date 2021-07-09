@@ -14,7 +14,7 @@ export class DrawRect extends UndoableCommand {
   protected execution(): void {
     if (this.rec === undefined) {
       this.rec = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
-      this.svgdoc.appendChild(this.rec);
+      this.svgdoc.insertBefore(this.rec, this.svgdoc.firstChild);
     }
     this.rec.setAttribute('x', this.minX.toString());
     this.rec.setAttribute('y', this.minY.toString());

@@ -16,6 +16,15 @@ export class TabShapesComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
 
+  @ViewChild('handle')
+  public handle: ElementRef<SVGCircleElement>;
+
+  @ViewChild('spring')
+  public spring: ElementRef<SVGLineElement>;
+
+  public interval: any;
+  public displaySpring: boolean;
+
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
@@ -31,14 +40,47 @@ export class TabShapesComponent implements OnInit, AfterViewInit {
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
 
+    this.spring.nativeElement.setAttribute('display', 'none');
+    this.handle.nativeElement.setAttribute('display', 'none');
+
     this.bindings.dndBinder(true)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
       .then((c, i) => {
-        c.vectorX = i.tgt.clientX - i.src.clientX;
-        c.vectorY = i.tgt.clientY - i.src.clientY;
+        c.vectorX = i.diffClientX;
+        c.vectorY = i.diffClientY;
+
+        // Management of the dwell and spring
+        // The element to use for this interaction (handle) must have the "ioDwellSpring" class
+        const boundary = this.canvas.nativeElement.getBoundingClientRect();
+        if (!this.displaySpring) {
+          clearInterval(this.interval);
+          this.interval = setInterval(() => {
+            clearInterval(this.interval);
+            this.displaySpring = true;
+            this.spring.nativeElement.setAttribute('display', 'block');
+            this.handle.nativeElement.setAttribute('display', 'block');
+
+            this.handle.nativeElement.setAttribute('cx', String(i.tgt.clientX - boundary.x - 50));
+            this.handle.nativeElement.setAttribute('cy', String(i.tgt.clientY - boundary.y));
+            this.spring.nativeElement.setAttribute('x1', String(i.src.clientX - boundary.x));
+            this.spring.nativeElement.setAttribute('y1', String(i.src.clientY - boundary.y));
+            this.spring.nativeElement.setAttribute('x2', String(i.tgt.clientX - boundary.x - 50));
+            this.spring.nativeElement.setAttribute('y2', String(i.tgt.clientY - boundary.y));
+            if (i.tgt.clientX - boundary.x < 50) {
+              this.handle.nativeElement.setAttribute('cx', String(i.tgt.clientX - boundary.x + 50));
+              this.spring.nativeElement.setAttribute('x2', String(i.tgt.clientX - boundary.x + 50));
+            }
+          }, 1000);
+        }
       })
       .continuousExecution()
+      .endOrCancel(() => {
+        clearInterval(this.interval);
+        this.displaySpring = false;
+        this.spring.nativeElement.setAttribute('display', 'none');
+        this.handle.nativeElement.setAttribute('display', 'none');
+      })
       .bind();
 
     this.bindings.longTouchBinder(2000)
