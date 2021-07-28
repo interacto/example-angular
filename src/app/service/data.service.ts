@@ -7,6 +7,13 @@ export class DataService {
   txt: string;
   readonly cards1: Array<CardData>;
   readonly cards2: Array<CardData>;
+  pictures = [
+    {src: 'https://picsum.photos/seed/1/200'},
+    {src: 'https://picsum.photos/seed/2/200'},
+    {src: 'https://picsum.photos/seed/3/200'},
+    {src: 'https://picsum.photos/seed/4/200'}
+  ];
+  currentPicture = 0;
 
   public constructor() {
     this.txt = 'foo';

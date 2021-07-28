@@ -1,13 +1,14 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
 import {Bindings, TransferArrayItem, UndoHistory} from 'interacto';
+import {TabContentComponent} from '../tab-content/tab-content.component';
 
 @Component({
   selector: 'app-tab-cards',
   templateUrl: './tab-cards.component.html',
   styleUrls: ['./tab-cards.component.css']
 })
-export class TabCardsComponent implements OnInit, AfterViewInit {
+export class TabCardsComponent extends TabContentComponent implements OnInit, AfterViewInit {
   @ViewChild('cards1')
   public cards1: ElementRef<HTMLDivElement>;
 
@@ -21,6 +22,7 @@ export class TabCardsComponent implements OnInit, AfterViewInit {
   public sourceIndex: number;
 
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
+    super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject

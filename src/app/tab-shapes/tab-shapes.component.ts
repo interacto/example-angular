@@ -6,13 +6,14 @@ import {DeleteElt} from '../command/DeleteElt';
 import {ChangeColor} from '../command/ChangeColor';
 import {DrawRect} from '../command/DrawRect';
 import {DeleteAll} from '../command/DeleteAll';
+import {TabContentComponent} from '../tab-content/tab-content.component';
 
 @Component({
   selector: 'app-tab-shapes',
   templateUrl: './tab-shapes.component.html',
   styleUrls: ['./tab-shapes.component.css']
 })
-export class TabShapesComponent implements OnInit, AfterViewInit {
+export class TabShapesComponent extends TabContentComponent implements OnInit, AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
 
@@ -26,6 +27,7 @@ export class TabShapesComponent implements OnInit, AfterViewInit {
   public displaySpring: boolean;
 
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
+    super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject

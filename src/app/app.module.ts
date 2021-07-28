@@ -10,6 +10,8 @@ import { TabComponent } from './tab/tab.component';
 import { TabTextComponent } from './tab-text/tab-text.component';
 import { TabShapesComponent } from './tab-shapes/tab-shapes.component';
 import { TabCardsComponent } from './tab-cards/tab-cards.component';
+import { TabPicturesComponent } from './tab-pictures/tab-pictures.component';
+import { TabContentComponent } from './tab-content/tab-content.component';
 
 @NgModule({
   declarations: [
@@ -18,7 +20,9 @@ import { TabCardsComponent } from './tab-cards/tab-cards.component';
     TabComponent,
     TabTextComponent,
     TabShapesComponent,
-    TabCardsComponent
+    TabCardsComponent,
+    TabPicturesComponent,
+    TabContentComponent
   ],
   imports: [
     BrowserModule,
