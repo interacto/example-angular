@@ -8,10 +8,10 @@ export class DataService {
   readonly cards1: Array<CardData>;
   readonly cards2: Array<CardData>;
   pictures = [
-    {src: 'https://picsum.photos/seed/1/200'},
-    {src: 'https://picsum.photos/seed/2/200'},
-    {src: 'https://picsum.photos/seed/3/200'},
-    {src: 'https://picsum.photos/seed/4/200'}
+    {src: 'https://picsum.photos/seed/1/1000'},
+    {src: 'https://picsum.photos/seed/2/1000'},
+    {src: 'https://picsum.photos/seed/3/1000'},
+    {src: 'https://picsum.photos/seed/4/1000'}
   ];
   currentPicture = 0;
 
