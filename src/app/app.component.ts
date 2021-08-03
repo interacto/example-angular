@@ -2,7 +2,7 @@ import {AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren
 import {ClearText} from './command/ClearText';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, RedoNTimes, UndoHistory, UndoNTimes} from 'interacto';
+import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, Redo, RedoNTimes, Undo, UndoHistory, UndoNTimes} from 'interacto';
 import {DisplayPreview} from './command/DisplayPreview';
 import {HidePreview} from './command/HidePreview';
 import {MovePreview} from './command/MovePreview';
@@ -68,7 +68,7 @@ export class AppComponent implements AfterViewInit {
     // Command previews
 
     // Displays command previews for undo buttons
-    this.bindings.mouseoverBinder(false)
+    this.bindings.mouseEnterBinder(false)
       .onDynamic(this.undoButtonContainer)
       .toProduce(i => new DisplayPreview(
         this.undoHistory.getUndo()[this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.target as HTMLButtonElement)],
@@ -76,7 +76,7 @@ export class AppComponent implements AfterViewInit {
       .bind();
 
     // Displays command previews for redo buttons
-    this.bindings.mouseoverBinder(false)
+    this.bindings.mouseEnterBinder(false)
       .onDynamic(this.redoButtonContainer)
       .toProduce(i => new DisplayPreview(
         this.undoHistory.getRedo()[
@@ -87,17 +87,52 @@ export class AppComponent implements AfterViewInit {
       .bind();
 
     // Hides command previews for undo and redo buttons
-    this.bindings.mouseoutBinder(false)
+    this.bindings.mouseLeaveBinder(false)
       .onDynamic(this.undoButtonContainer)
       .onDynamic(this.redoButtonContainer)
       .toProduce(() => new HidePreview(this.preview.nativeElement))
       .bind();
 
     // Moves command previews to the mouse's position for undo and redo buttons
-    this.bindings.mousemoveBinder()
+    this.bindings.mouseMoveBinder()
       .onDynamic(this.undoButtonContainer)
       .onDynamic(this.redoButtonContainer)
       .toProduce(i => new MovePreview(this.preview.nativeElement, i.pageX, i.pageY))
+      .bind();
+
+    this.bindings.keyDownBinder(true)
+      .on(document.body)
+      .toProduce(() => new Undo(this.undoHistory))
+      .with(false, 'z')
+      .when((i) => i.ctrlKey && !i.shiftKey)
+      .bind();
+
+    this.bindings.keyDownBinder(true)
+      .on(document.body)
+      .toProduce(() => new Redo(this.undoHistory))
+      .with(false, 'Z')
+      .when((i) => i.ctrlKey && i.shiftKey)
+      .bind();
+
+    this.bindings.keyDownBinder(true)
+      .on(document.body)
+      .toProduce(() => new Redo(this.undoHistory))
+      .with(false, 'z')
+      .when((i) => i.ctrlKey && i.shiftKey)
+      .bind();
+
+    this.bindings.keyDownBinder(true)
+      .on(document.body)
+      .toProduce(() => new Redo(this.undoHistory))
+      .with(false, 'y')
+      .when((i) => i.ctrlKey)
+      .bind();
+
+    this.bindings.keyDownBinder(true)
+      .on(document.body)
+      .toProduce(() => new Redo(this.undoHistory))
+      .with(false, 'Y')
+      .when((i) => i.ctrlKey)
       .bind();
   }
 

@@ -1,6 +1,11 @@
+Use the left and right keyboard arrows to navigate between pictures.
+Use ctrl + mouse wheel on pictures to zoom.
+<br/><br/>
 <div #carousel class="carousel">
-  <ng-container *ngFor="let picture of dataService.pictures; index as i">
-    <img #picture src="{{picture.src}}" alt="{{'image ' + i}}" [hidden]="dataService.currentPicture !== i">
-  </ng-container>
+  <div #container class="container">
+    <ng-container *ngFor="let picture of dataService.pictures; index as i">
+      <img #picture src="{{picture.src}}" alt="{{'image ' + i}}" [hidden]="dataService.currentPicture !== i">
+    </ng-container>
+  </div>
 </div>
 

@@ -2,20 +2,24 @@
   position: relative;
   top: 0;
   left: 0;
-  overflow-y:auto;
-  overflow-x:auto;
-  width: 700px;
-  height: 700px;
+  height: 400px;
+  width: 400px;
+  overflow: auto;
+  border-style: solid;
 }
 
-.carousel img{
+.container {
   position: absolute;
   top: 0;
   left: 0;
+  height: 100%;
+  width: 100%;
+}
 
-  /*-webkit-touch-callout: none; !* iOS Safari *!*/
-  /*-webkit-user-select: none; !* Safari *!*/
-  /*-moz-user-select: none; !* Old versions of Firefox *!*/
-  /*-ms-user-select: none; !* Internet Explorer/Edge *!*/
-  /*user-select: none; !* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox *!*/
+.container img{
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
 }
