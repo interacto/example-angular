@@ -2,7 +2,17 @@ import {AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren
 import {ClearText} from './command/ClearText';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, Redo, RedoNTimes, Undo, UndoHistory, UndoNTimes} from 'interacto';
+import {
+  Bindings,
+  LogLevel,
+  PartialButtonBinder,
+  PartialTextInputBinder,
+  Redo,
+  RedoNTimes,
+  Undo,
+  UndoHistory,
+  UndoNTimes
+} from 'interacto';
 import {DisplayPreview} from './command/DisplayPreview';
 import {HidePreview} from './command/HidePreview';
 import {MovePreview} from './command/MovePreview';
@@ -31,6 +41,12 @@ export class AppComponent implements AfterViewInit {
   @ViewChild('preview')
   public preview: ElementRef<HTMLDivElement>;
 
+  @ViewChild('handle')
+  public handle: ElementRef<SVGCircleElement>;
+
+  @ViewChild('spring')
+  public spring: ElementRef<SVGLineElement>;
+
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
@@ -40,11 +56,15 @@ export class AppComponent implements AfterViewInit {
     // If the server address is not set to undefined, Interacto will try to send usage and error logs to the back-end
     // See an example of such a back-end at https://github.com/interacto/logger-backend
     // Here the address is configured by a proxy
-    this.bindings.logger.serverAddress = '';
+    // (uncomment the following line to enable communication with the back-end)
+    // this.bindings.logger.serverAddress = '';
   }
 
   ngAfterViewInit(): void {
     this.preview.nativeElement.style.display = 'none';
+
+    this.spring.nativeElement.setAttribute('display', 'none');
+    this.handle.nativeElement.setAttribute('display', 'none');
 
     this.bindings.buttonBinder()
       .on(this.baseStateButton)

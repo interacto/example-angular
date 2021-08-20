@@ -28,4 +28,8 @@ export class MoveRect extends UndoableCommand {
     this.rec.setAttribute('x', String(this.mementoX));
     this.rec.setAttribute('y', String(this.mementoY));
   }
+
+  public getUndoName(): string {
+    return 'Move rectangle';
+  }
 }

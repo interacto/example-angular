@@ -7,6 +7,7 @@ import {ChangeColor} from '../command/ChangeColor';
 import {DrawRect} from '../command/DrawRect';
 import {DeleteAll} from '../command/DeleteAll';
 import {TabContentComponent} from '../tab-content/tab-content.component';
+import {AppComponent} from '../app.component';
 
 @Component({
   selector: 'app-tab-shapes',
@@ -17,16 +18,11 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
 
-  @ViewChild('handle')
-  public handle: ElementRef<SVGCircleElement>;
+  // Used to disable deletion on a long press when dragging a shape
+  public dragging: boolean;
 
-  @ViewChild('spring')
-  public spring: ElementRef<SVGLineElement>;
-
-  public interval: any;
-  public displaySpring: boolean;
-
-  public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
+  public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings,
+                     private appComponent: AppComponent) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
@@ -42,57 +38,37 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
 
-    this.spring.nativeElement.setAttribute('display', 'none');
-    this.handle.nativeElement.setAttribute('display', 'none');
-
-    this.bindings.dndBinder(true)
+    this.bindings.reciprocalDndBinder(this.appComponent.handle, this.appComponent.spring)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
-
-        // Management of the dwell and spring
-        // The element to use for this interaction (handle) must have the "ioDwellSpring" class
-        const boundary = this.canvas.nativeElement.getBoundingClientRect();
-        if (!this.displaySpring) {
-          clearInterval(this.interval);
-          this.interval = setInterval(() => {
-            clearInterval(this.interval);
-            this.displaySpring = true;
-            this.spring.nativeElement.setAttribute('display', 'block');
-            this.handle.nativeElement.setAttribute('display', 'block');
-
-            this.handle.nativeElement.setAttribute('cx', String(i.tgt.clientX - boundary.x - 50));
-            this.handle.nativeElement.setAttribute('cy', String(i.tgt.clientY - boundary.y));
-            this.spring.nativeElement.setAttribute('x1', String(i.src.clientX - boundary.x));
-            this.spring.nativeElement.setAttribute('y1', String(i.src.clientY - boundary.y));
-            this.spring.nativeElement.setAttribute('x2', String(i.tgt.clientX - boundary.x - 50));
-            this.spring.nativeElement.setAttribute('y2', String(i.tgt.clientY - boundary.y));
-            if (i.tgt.clientX - boundary.x < 50) {
-              this.handle.nativeElement.setAttribute('cx', String(i.tgt.clientX - boundary.x + 50));
-              this.spring.nativeElement.setAttribute('x2', String(i.tgt.clientX - boundary.x + 50));
-            }
-          }, 1000);
-        }
       })
       .continuousExecution()
-      .endOrCancel(() => {
-        clearInterval(this.interval);
-        this.displaySpring = false;
-        this.spring.nativeElement.setAttribute('display', 'none');
-        this.handle.nativeElement.setAttribute('display', 'none');
+      .bind();
+
+    this.bindings.reciprocalTouchDnDBinder(this.appComponent.handle, this.appComponent.spring)
+      .onDynamic(this.canvas)
+      .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
+        .first(() => this.dragging = true)
+      .then((c, i) => {
+        c.vectorX = i.diffClientX;
+        c.vectorY = i.diffClientY;
       })
+      .endOrCancel(() => this.dragging = false)
+      .continuousExecution()
+      .preventDefault()
       .bind();
 
     this.bindings.longTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
       .onDynamic(this.canvas)
       .when(i => i.currentTarget !== this.canvas.nativeElement && i.currentTarget instanceof SVGElement)
-      // Prevents the context menu to pop-up
+      // Prevents the deletion from occurring when dragging the shape
+      .when(() => this.dragging === false)
+      // Prevents the context menu from popping up
       .preventDefault()
-      // Consumes the events before the multi-touch interaction and co use them
-      .stopImmediatePropagation()
       .bind();
 
     this.bindings.tapBinder(3)
@@ -118,10 +94,12 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
       .preventDefault()
       .bind();
 
-    this.bindings.swipeBinder(true, 300, 500, 50)
+    this.bindings.swipeBinder(true, 300, 500, 1, 50)
       .toProduce(() => new DeleteAll(this.canvas.nativeElement))
       .on(this.canvas)
-      .when(i => i.src.currentTarget === this.canvas.nativeElement)
+      .when(i => i.touches[0].src.currentTarget === this.canvas.nativeElement)
+      // Prevents the swipe from occurring when dragging the shape
+      .when(() => this.dragging === false)
       .preventDefault()
       .bind();
   }
