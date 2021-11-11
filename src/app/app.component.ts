@@ -77,12 +77,12 @@ export class AppComponent implements AfterViewInit {
       .toProduce(i => new UndoNTimes(
                 this.undoHistory,
                 // The native elements have to be retrieved from the child list since this list contains ElementRefs
-  this.undoButtons.toArray().length - this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget) - 1))
+  this.undoButtons.toArray().length - this.undoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget!) - 1))
       .bind();
 
     this.bindings.buttonBinder()
       .onDynamic(this.redoButtonContainer)
-      .toProduce(i => new RedoNTimes(this.undoHistory, this.redoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget) + 1))
+      .toProduce(i => new RedoNTimes(this.undoHistory, this.redoButtons.toArray().map(elt => elt.nativeElement).indexOf(i.widget!) + 1))
       .bind();
 
     // Command previews
@@ -170,7 +170,7 @@ export class AppComponent implements AfterViewInit {
   writeTextBinder(binder: PartialTextInputBinder): void {
     binder
       .toProduce(() => new SetText(this.dataService))
-      .then((c, i) => c.text = i.widget.value)
+      .then((c, i) => c.text = i.widget?.value ?? '')
       .bind();
   }
 }

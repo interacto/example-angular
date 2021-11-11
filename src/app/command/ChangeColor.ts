@@ -1,7 +1,7 @@
 import {UndoableCommand} from 'interacto';
 
 export class ChangeColor extends UndoableCommand {
-  private mementoColor: string | undefined;
+  private mementoColor: string | null;
   private newColor: string;
 
   constructor(private readonly svgElt: SVGElement) {
@@ -19,7 +19,11 @@ export class ChangeColor extends UndoableCommand {
   }
 
   public undo(): void {
-    this.svgElt.setAttribute('fill', this.mementoColor);
+    if (this.mementoColor === null) {
+      this.svgElt.removeAttribute('fill');
+    }else {
+      this.svgElt.setAttribute('fill', this.mementoColor);
+    }
   }
 
   public redo(): void {

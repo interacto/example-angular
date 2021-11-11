@@ -5,13 +5,11 @@
 h1 {
   text-align: center;
   min-height: 30px;
-  width: calc(100vw - (220px));
 }
 
 .history {
-  max-height:100vh;
-  min-height:100vh;
-  width: 200px;
+  height: 100%;
+  width: 10%;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -90,10 +88,8 @@ h1 {
 
 .main {
   position: absolute;
-  left: 220px;
-  top: 0;
-  bottom: 0;
-  right: 20px;
+  left: 11%;
+  width: 85%;
 }
 
 .main button {

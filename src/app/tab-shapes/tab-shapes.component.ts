@@ -1,20 +1,20 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
 import {Bindings, UndoHistory} from 'interacto';
-import {MoveRect} from '../command/MoveRect';
 import {DeleteElt} from '../command/DeleteElt';
-import {ChangeColor} from '../command/ChangeColor';
 import {DrawRect} from '../command/DrawRect';
-import {DeleteAll} from '../command/DeleteAll';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 import {AppComponent} from '../app.component';
+import {MoveRect} from '../command/MoveRect';
+import {ChangeColor} from '../command/ChangeColor';
+import {DeleteAll} from '../command/DeleteAll';
 
 @Component({
   selector: 'app-tab-shapes',
   templateUrl: './tab-shapes.component.html',
   styleUrls: ['./tab-shapes.component.css']
 })
-export class TabShapesComponent extends TabContentComponent implements OnInit, AfterViewInit {
+export class TabShapesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
 
@@ -30,9 +30,6 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
     // it most of the time since this.bindings.undoHistory returns the same instance).
   }
 
-  ngOnInit(): void {
-  }
-
   ngAfterViewInit(): void {
     const drawrect = new DrawRect(this.canvas.nativeElement);
     drawrect.setCoords(10, 10, 300, 300);
@@ -45,13 +42,15 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
       })
+      .when(i => i.tgt.currentTarget !== this.canvas.nativeElement)
       .continuousExecution()
       .bind();
 
     this.bindings.reciprocalTouchDnDBinder(this.appComponent.handle, this.appComponent.spring)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
-        .first(() => this.dragging = true)
+      .when(i => i.src.currentTarget !== this.canvas.nativeElement)
+      .first(() => this.dragging = true)
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
@@ -66,7 +65,6 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
       .onDynamic(this.canvas)
       .when(i => i.currentTarget !== this.canvas.nativeElement && i.currentTarget instanceof SVGElement)
       // Prevents the deletion from occurring when dragging the shape
-      .when(() => this.dragging === false)
       // Prevents the context menu from popping up
       .preventDefault()
       .bind();
@@ -97,11 +95,10 @@ export class TabShapesComponent extends TabContentComponent implements OnInit, A
     this.bindings.swipeBinder(true, 300, 500, 1, 50)
       .toProduce(() => new DeleteAll(this.canvas.nativeElement))
       .on(this.canvas)
-      .when(i => i.touches[0].src.currentTarget === this.canvas.nativeElement)
+      .when(i => i.touches.length === 1 && i.touches[0].src.currentTarget === this.canvas.nativeElement)
       // Prevents the swipe from occurring when dragging the shape
-      .when(() => this.dragging === false)
+      .when(() => !this.dragging)
       .preventDefault()
       .bind();
   }
-
 }

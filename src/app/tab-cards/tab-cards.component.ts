@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
-import {DataService} from '../service/data.service';
-import {Bindings, TransferArrayItem, UndoHistory} from 'interacto';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {CardData, DataService} from '../service/data.service';
+import {Bindings, TransferArrayItem} from 'interacto';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 
 @Component({
@@ -8,7 +8,7 @@ import {TabContentComponent} from '../tab-content/tab-content.component';
   templateUrl: './tab-cards.component.html',
   styleUrls: ['./tab-cards.component.css']
 })
-export class TabCardsComponent extends TabContentComponent implements OnInit, AfterViewInit {
+export class TabCardsComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('cards1')
   public cards1: ElementRef<HTMLDivElement>;
 
@@ -18,18 +18,15 @@ export class TabCardsComponent extends TabContentComponent implements OnInit, Af
   public mementoX: string;
   public mementoY: string;
   public mementoCSSPosition: string;
-  public card: HTMLElement;
+  public card: HTMLElement | null;
   public sourceIndex: number;
 
-  public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
+  public constructor(public dataService: DataService, public bindings: Bindings) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject
     // it most of the time since this.bindings.undoHistory returns the same instance).
-  }
-
-  ngOnInit(): void {
   }
 
   ngAfterViewInit() {
@@ -39,7 +36,7 @@ export class TabCardsComponent extends TabContentComponent implements OnInit, Af
       .toProduce(() => {
         // The command is not executable until a proper target destination for the card has been selected by the user
         // The -1 index prevents makes canExecute() return false and prevents Interacto from executing the command
-        return new TransferArrayItem(null, null, -1, 0, 'Drag card');
+        return new TransferArrayItem<CardData>([], [], -1, 0, 'Drag card');
       })
       // Checks if the user picked a valid card, and a new list for the card as a destination
       .when(i => {
@@ -47,9 +44,9 @@ export class TabCardsComponent extends TabContentComponent implements OnInit, Af
         const card = (i.src.target as Element).closest('mat-card');
         return card !== null;
       })
-      .first((c, i) => {
+      .first((_, i) => {
         this.card = (i.src.target as Element).closest('mat-card') as HTMLElement;
-        this.sourceIndex = Array.prototype.indexOf.call(this.card.parentNode.children, this.card);
+        this.sourceIndex = Array.prototype.indexOf.call(this.card!.parentNode?.children ?? [], this.card);
         // Saves the initial state of the card's style to be able to restore it if the command can't be executed
         this.mementoX = this.card.style.left;
         this.mementoY = this.card.style.top;
@@ -64,19 +61,19 @@ export class TabCardsComponent extends TabContentComponent implements OnInit, Af
         let x = i.tgt.pageX - 220;
         let y = i.tgt.pageY;
         // Prevents parts of the card from going outside of the document
-        if (i.tgt.pageX > window.innerWidth - this.card.clientWidth - 10) {
-          x = x - this.card.clientWidth - 5;
+        if (i.tgt.pageX > window.innerWidth - this.card!.clientWidth - 10) {
+          x = x - this.card!.clientWidth - 5;
         }
-        if (i.tgt.pageY > window.innerHeight - this.card.clientHeight - 15) {
-          y = y - this.card.clientHeight - 5;
+        if (i.tgt.pageY > window.innerHeight - this.card!.clientHeight - 15) {
+          y = y - this.card!.clientHeight - 5;
         }
 
         // Moves the card visually
-        this.card.style.left = String(x) + 'px';
-        this.card.style.top = String(y) + 'px';
+        this.card!.style.left = String(x) + 'px';
+        this.card!.style.top = String(y) + 'px';
 
         // Checks if the target selected is valid for the current card and makes the command executable if it is
-        const isCardPositionValid = (this.card.parentNode === this.cards1.nativeElement ?
+        const isCardPositionValid = (this.card!.parentNode === this.cards1.nativeElement ?
           i.tgt.target === this.cards2.nativeElement : i.tgt.target === this.cards1.nativeElement);
         if (!isCardPositionValid) {
           c.srcIndex = -1;
@@ -96,14 +93,14 @@ export class TabCardsComponent extends TabContentComponent implements OnInit, Af
       })
       // Resets the position of the card if the command is invalid or cancelled
       .ifCannotExecute(() => {
-        this.card.style.left = this.mementoX;
-        this.card.style.top = this.mementoY;
-        this.card.style.position = this.mementoCSSPosition;
+        this.card!.style.left = this.mementoX;
+        this.card!.style.top = this.mementoY;
+        this.card!.style.position = this.mementoCSSPosition;
       })
       .cancel(() => {
-        this.card.style.left = this.mementoX;
-        this.card.style.top = this.mementoY;
-        this.card.style.position = this.mementoCSSPosition;
+        this.card!.style.left = this.mementoX;
+        this.card!.style.top = this.mementoY;
+        this.card!.style.position = this.mementoCSSPosition;
       })
       .bind();
   }

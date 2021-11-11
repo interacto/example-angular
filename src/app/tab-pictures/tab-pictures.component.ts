@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChild, ViewChildren} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
-import {AnonCmd, Bindings, UndoHistory} from 'interacto';
+import {Bindings, UndoHistory} from 'interacto';
 import {ChangeCurrentPicture} from '../command/ChangeCurrentPicture';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 import {Zoom} from '../command/Zoom';
@@ -17,10 +17,10 @@ export class TabPicturesComponent extends TabContentComponent implements OnInit,
   @ViewChild('container')
   private container: ElementRef<HTMLDivElement>;
 
-  @ViewChildren('picture')
-  private pictures: QueryList<ElementRef<HTMLImageElement>>;
+  // @ViewChildren('picture')
+  // private pictures: QueryList<ElementRef<HTMLImageElement>>;
 
-  private ctrlPressed: boolean;
+  // private ctrlPressed: boolean;
 
   constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
     super();
@@ -49,13 +49,13 @@ export class TabPicturesComponent extends TabContentComponent implements OnInit,
       .when(() => this.tabActive)
       .bind();
 
-    this.bindings.keyDownBinder(true)
-      .on(document.body)
-      .toProduce(() => new AnonCmd(() => this.ctrlPressed = true))
-      .with(false, 'Control')
-      // The user cannot navigate between pictures if the picture tab is not active
-      .when(() => this.tabActive)
-      .bind();
+    // this.bindings.keyDownBinder(true)
+    //   .on(document.body)
+    //   .toProduce(() => new AnonCmd(() => this.ctrlPressed = true))
+    //   .with(false, 'Control')
+    //   // The user cannot navigate between pictures if the picture tab is not active
+    //   .when(() => this.tabActive)
+    //   .bind();
 
     this.bindings.wheelBinder()
       .on(this.carousel.nativeElement)

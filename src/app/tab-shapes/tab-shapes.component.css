@@ -1,6 +1,6 @@
 #canvas-container {
   height:600px;
   width: 1000px;
-  overflow:scroll;
   border:1px solid black;
+  touch-action: none;
 }

@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input} from '@angular/core';
 
 @Component({
   selector: 'app-tab-content',
@@ -8,12 +8,8 @@ import {Component, Input, OnInit} from '@angular/core';
 /**
  * Component placed inside a tab that knows if the tab is currently active.
  */
-export class TabContentComponent implements OnInit {
+export class TabContentComponent {
   @Input() tabActive: boolean;
 
   constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

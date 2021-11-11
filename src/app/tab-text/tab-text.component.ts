@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core';
-import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
+import {Component} from '@angular/core';
+import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
@@ -10,18 +10,14 @@ import {TabContentComponent} from '../tab-content/tab-content.component';
   templateUrl: './tab-text.component.html',
   styleUrls: ['./tab-text.component.css']
 })
-export class TabTextComponent extends TabContentComponent implements OnInit {
+export class TabTextComponent extends TabContentComponent {
 
-  public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings) {
+  public constructor(public dataService: DataService, public bindings: Bindings) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject
     // it most of the time since this.bindings.undoHistory returns the same instance).
-  }
-
-
-  ngOnInit(): void {
   }
 
   // This method is called by the Interacto directive specified in the HTML document
@@ -39,7 +35,7 @@ export class TabTextComponent extends TabContentComponent implements OnInit {
   writeTextBinder(binder: PartialTextInputBinder): void {
     binder
       .toProduce(() => new SetText(this.dataService))
-      .then((c, i) => c.text = i.widget.value)
+      .then((c, i) => c.text = i.widget?.value ?? '')
       .bind();
   }
 }
