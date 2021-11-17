@@ -1,12 +1,12 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
 import {Bindings, UndoHistory} from 'interacto';
-import {DeleteElt} from '../command/DeleteElt';
 import {DrawRect} from '../command/DrawRect';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 import {AppComponent} from '../app.component';
 import {MoveRect} from '../command/MoveRect';
 import {ChangeColor} from '../command/ChangeColor';
+import {DeleteElt} from '../command/DeleteElt';
 import {DeleteAll} from '../command/DeleteAll';
 
 @Component({
@@ -17,9 +17,6 @@ import {DeleteAll} from '../command/DeleteAll';
 export class TabShapesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
-
-  // Used to disable deletion on a long press when dragging a shape
-  public dragging: boolean;
 
   public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings,
                      private appComponent: AppComponent) {
@@ -49,21 +46,17 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     this.bindings.reciprocalTouchDnDBinder(this.appComponent.handle, this.appComponent.spring)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
-      .when(i => i.src.currentTarget !== this.canvas.nativeElement)
-      .first(() => this.dragging = true)
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
       })
-      .endOrCancel(() => this.dragging = false)
       .continuousExecution()
-      .preventDefault()
       .bind();
 
     this.bindings.longTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
       .onDynamic(this.canvas)
-      .when(i => i.currentTarget !== this.canvas.nativeElement && i.currentTarget instanceof SVGElement)
+      .when(i => i.target !== this.canvas.nativeElement)
       // Prevents the deletion from occurring when dragging the shape
       // Prevents the context menu from popping up
       .preventDefault()
@@ -72,8 +65,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     this.bindings.tapBinder(3)
       .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement))
       .onDynamic(this.canvas)
-      .when(i => i.taps[0].currentTarget !== this.canvas.nativeElement
-        && i.taps[0].currentTarget instanceof SVGElement)
+      .when(i => i.taps[0].target !== this.canvas.nativeElement)
       // Does not continue to run if the first targeted node is not an SVG element
       .strictStart()
       .bind();
@@ -89,16 +81,13 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
           Math.max(...i.touches.map(touch => touch.tgt.clientY)) - boundary.y);
       })
       .continuousExecution()
-      .preventDefault()
       .bind();
 
     this.bindings.swipeBinder(true, 300, 500, 1, 50)
       .toProduce(() => new DeleteAll(this.canvas.nativeElement))
       .on(this.canvas)
-      .when(i => i.touches.length === 1 && i.touches[0].src.currentTarget === this.canvas.nativeElement)
-      // Prevents the swipe from occurring when dragging the shape
-      .when(() => !this.dragging)
-      .preventDefault()
+      .when(i => i.touches[0].src.target === this.canvas.nativeElement)
+      .continuousExecution()
       .bind();
   }
 }
