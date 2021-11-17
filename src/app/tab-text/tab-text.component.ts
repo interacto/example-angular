@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder} from 'interacto';
+import {LogLevel, PartialButtonBinder, PartialTextInputBinder} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
@@ -12,7 +12,7 @@ import {TabContentComponent} from '../tab-content/tab-content.component';
 })
 export class TabTextComponent extends TabContentComponent {
 
-  public constructor(public dataService: DataService, public bindings: Bindings) {
+  public constructor(public dataService: DataService) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
