@@ -21,7 +21,7 @@
     "@angular/platform-browser": "~12.2.8",
     "@angular/platform-browser-dynamic": "~12.2.8",
     "@angular/router": "~12.2.8",
-    "interacto": "6.0.0",
+    "interacto": "^6.0.1",
     "interacto-angular": "^1.0.0-beta.12",
     "rxjs": "6.6.7",
     "tslib": "2.0.0",
