@@ -3,11 +3,11 @@ import {DataService} from '../service/data.service';
 import {Bindings, UndoHistory} from 'interacto';
 import {DrawRect} from '../command/DrawRect';
 import {TabContentComponent} from '../tab-content/tab-content.component';
-import {AppComponent} from '../app.component';
 import {MoveRect} from '../command/MoveRect';
 import {ChangeColor} from '../command/ChangeColor';
 import {DeleteElt} from '../command/DeleteElt';
 import {DeleteAll} from '../command/DeleteAll';
+import {AppComponent} from '../app.component';
 
 @Component({
   selector: 'app-tab-shapes',

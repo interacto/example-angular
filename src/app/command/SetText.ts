@@ -13,7 +13,7 @@ export class SetText extends UndoableCommand {
     }
 
     protected execution(): void {
-        this.data.txt = this.newText as string;
+        this.data.txt = this.newText!;
     }
 
     public canExecute(): boolean {

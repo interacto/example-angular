@@ -2,17 +2,7 @@ import {AfterViewInit, Component, ElementRef, QueryList, ViewChild, ViewChildren
 import {ClearText} from './command/ClearText';
 import {SetText} from './command/SetText';
 import {DataService} from './service/data.service';
-import {
-  Bindings,
-  LogLevel,
-  PartialButtonBinder,
-  PartialTextInputBinder,
-  Redo,
-  RedoNTimes,
-  Undo,
-  UndoHistory,
-  UndoNTimes
-} from 'interacto';
+import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, Redo, RedoNTimes, Undo, UndoHistory, UndoNTimes} from 'interacto';
 import {DisplayPreview} from './command/DisplayPreview';
 import {HidePreview} from './command/HidePreview';
 import {MovePreview} from './command/MovePreview';
@@ -62,9 +52,6 @@ export class AppComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     this.preview.nativeElement.style.display = 'none';
-
-    this.spring.nativeElement.setAttribute('display', 'none');
-    this.handle.nativeElement.setAttribute('display', 'none');
 
     this.bindings.buttonBinder()
       .on(this.baseStateButton)
