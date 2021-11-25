@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { TabShapesComponent } from './tab-shapes.component';
+import {TabShapesComponent} from './tab-shapes.component';
+import {InteractoModule} from 'interacto-angular';
 
 describe('TabShapesComponent', () => {
   let component: TabShapesComponent;
@@ -8,7 +9,12 @@ describe('TabShapesComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TabShapesComponent ]
+      declarations: [
+        TabShapesComponent
+      ],
+      imports: [
+        InteractoModule
+      ]
     })
     .compileComponents();
   });

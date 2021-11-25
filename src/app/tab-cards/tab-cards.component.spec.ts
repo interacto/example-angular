@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TabCardsComponent } from './tab-cards.component';
+import {InteractoModule} from 'interacto-angular';
 
 describe('TabCardsComponent', () => {
   let component: TabCardsComponent;
@@ -8,7 +9,10 @@ describe('TabCardsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TabCardsComponent ]
+      declarations: [ TabCardsComponent ],
+      imports: [
+        InteractoModule
+      ]
     })
     .compileComponents();
   });
