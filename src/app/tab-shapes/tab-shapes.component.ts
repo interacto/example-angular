@@ -8,11 +8,17 @@ import {ChangeColor} from '../command/ChangeColor';
 import {DeleteElt} from '../command/DeleteElt';
 import {DeleteAll} from '../command/DeleteAll';
 import {AppComponent} from '../app.component';
+import {bindingsFactory, undoHistoryFactory} from 'interacto-angular';
 
 @Component({
   selector: 'app-tab-shapes',
   templateUrl: './tab-shapes.component.html',
-  styleUrls: ['./tab-shapes.component.css']
+  styleUrls: ['./tab-shapes.component.css'],
+  // This providers is optional. It permits to have a specific Bindings and thus a specific UndoHistory for this
+  // component. Useful when you want to have different undo histories.
+  providers: [
+    {provide: Bindings, useFactory: bindingsFactory},
+    {provide: UndoHistory, useFactory: undoHistoryFactory, deps: [Bindings]}]
 })
 export class TabShapesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('canvas')

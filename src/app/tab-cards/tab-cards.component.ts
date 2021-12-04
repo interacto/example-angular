@@ -1,12 +1,16 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {CardData, DataService} from '../service/data.service';
-import {Bindings, TransferArrayItem} from 'interacto';
+import {Bindings, TransferArrayItem, UndoHistory} from 'interacto';
 import {TabContentComponent} from '../tab-content/tab-content.component';
+import {bindingsFactory, undoHistoryFactory} from 'interacto-angular';
 
 @Component({
   selector: 'app-tab-cards',
   templateUrl: './tab-cards.component.html',
-  styleUrls: ['./tab-cards.component.css']
+  styleUrls: ['./tab-cards.component.css'],
+  providers: [
+    {provide: Bindings, useFactory: bindingsFactory},
+    {provide: UndoHistory, useFactory: undoHistoryFactory, deps: [Bindings]}]
 })
 export class TabCardsComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('cards1')

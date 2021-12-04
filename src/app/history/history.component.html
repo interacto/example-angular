@@ -1,0 +1,36 @@
+
+<div class="history">
+  <div class="header">
+    <h2>HISTORY</h2>
+    <button ioUndo class="button-undo-redo">UNDO</button>
+    <button ioRedo class="button-undo-redo">REDO</button>
+  </div>
+
+  <div class="buttons">
+    <button #baseStateButton class="history-button-active">Start</button>
+
+    <div #undoButtonContainer>
+      <ng-container *ngFor="let undoable of undoHistory.getUndo(); index as i">
+        <button #undobuttons class="history-button-active">{{undoable.getUndoName()}}</button>
+        <br/>
+      </ng-container>
+    </div>
+
+    <div #redoButtonContainer>
+      <ng-container *ngFor="let undoable of undoHistory.getRedo(); index as i">
+        <button #redobuttons
+                class="history-button-inactive">
+          {{undoHistory.getRedo()[undoHistory.getRedo().length - i - 1].getUndoName()}}
+        </button>
+        <br/>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<div class="preview" #preview [ngStyle]="{whiteSpace: 'pre-line'}">
+  <p></p>
+  <svg class="preview-canvas">
+  </svg>
+</div>
+
