@@ -40,7 +40,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
 
     this.bindings.reciprocalDndBinder(this.appComponent.handle, this.appComponent.spring)
       .onDynamic(this.canvas)
-      .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
+      .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
@@ -51,7 +51,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
 
     this.bindings.reciprocalTouchDnDBinder(this.appComponent.handle, this.appComponent.spring)
       .onDynamic(this.canvas)
-      .toProduce(i => new MoveRect(i.src.target as SVGRectElement))
+      .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
@@ -69,7 +69,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .bind();
 
     this.bindings.tapBinder(3)
-      .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement))
+      .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement, this.canvas.nativeElement))
       .onDynamic(this.canvas)
       .when(i => i.taps[0].target !== this.canvas.nativeElement)
       // Does not continue to run if the first targeted node is not an SVG element

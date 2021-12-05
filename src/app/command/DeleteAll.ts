@@ -1,15 +1,15 @@
-import {UndoableCommand} from 'interacto';
+import {SVGCommand} from './SVGCommand';
 
-export class DeleteAll extends UndoableCommand {
+export class DeleteAll extends SVGCommand {
   private mementoContent: Array<Node>;
 
-  public constructor(private readonly svgDoc: SVGSVGElement) {
-    super();
+  public constructor(svgDoc: SVGSVGElement) {
+    super(svgDoc);
     this.mementoContent = [];
   }
 
   protected createMemento(): void {
-    this.mementoContent = Array.from(this.svgDoc.children);
+    this.mementoContent = Array.from(this.svgdoc.children);
   }
 
   protected execution(): void {
@@ -21,10 +21,10 @@ export class DeleteAll extends UndoableCommand {
   }
 
   public redo(): void {
-    Array.from(this.svgDoc.children).forEach(node => node.remove());
+    Array.from(this.svgdoc.children).forEach(node => node.remove());
   }
 
   public undo(): void {
-    this.mementoContent.forEach(node => this.svgDoc.appendChild(node));
+    this.mementoContent.forEach(node => this.svgdoc.appendChild(node));
   }
 }

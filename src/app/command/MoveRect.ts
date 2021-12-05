@@ -1,8 +1,8 @@
-import {UndoableCommand} from 'interacto';
+import {SVGCommand} from './SVGCommand';
 
-export class MoveRect extends UndoableCommand {
-  constructor(private readonly rec: SVGRectElement) {
-    super();
+export class MoveRect extends SVGCommand {
+  constructor(private readonly rec: SVGRectElement, svgdoc: SVGSVGElement) {
+    super(svgdoc);
   }
 
   private mementoX: number;

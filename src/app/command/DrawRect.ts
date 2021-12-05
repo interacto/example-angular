@@ -1,14 +1,14 @@
-import {UndoableCommand} from 'interacto';
+import {SVGCommand} from './SVGCommand';
 
-export class DrawRect extends UndoableCommand {
+export class DrawRect extends SVGCommand {
   private rec: SVGRectElement;
   private minX: number;
   private minY: number;
   private maxX: number;
   private maxY: number;
 
-  constructor(private readonly svgdoc: SVGSVGElement) {
-    super();
+  constructor(svgdoc: SVGSVGElement) {
+    super(svgdoc);
   }
 
   protected execution(): void {
@@ -40,13 +40,5 @@ export class DrawRect extends UndoableCommand {
 
   public getUndoName(): string {
     return 'Draw Rectangle';
-  }
-
-  public getVisualSnapshot(): SVGElement | string | undefined {
-    const elt = this.rec.cloneNode() as SVGElement;
-    elt.setAttribute('left', '0');
-    elt.setAttribute('x', '0');
-    elt.setAttribute('y', '0');
-    return elt;
   }
 }

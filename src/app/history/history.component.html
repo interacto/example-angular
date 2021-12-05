@@ -7,30 +7,21 @@
   </div>
 
   <div class="buttons">
-    <button #baseStateButton class="history-button-active">Start</button>
-
     <div #undoButtonContainer>
-      <ng-container *ngFor="let undoable of undoHistory.getUndo(); index as i">
-        <button #undobuttons class="history-button-active">{{undoable.getUndoName()}}</button>
-        <br/>
-      </ng-container>
+      <button #b *ngFor="let undoable of undoHistory.getUndo(); index as i"
+              class="history-button-active" [attr.data-index]="undoHistory.getUndo().length - i">
+        {{undoButtonSnapshot(undoable, b)}}
+      </button>
+      <br/>
     </div>
 
     <div #redoButtonContainer>
-      <ng-container *ngFor="let undoable of undoHistory.getRedo(); index as i">
-        <button #redobuttons
-                class="history-button-inactive">
-          {{undoHistory.getRedo()[undoHistory.getRedo().length - i - 1].getUndoName()}}
-        </button>
-        <br/>
-      </ng-container>
+      <p *ngIf="undoHistory.getRedo().length > 0">Redo:</p>
+      <button #b *ngFor="let _ of undoHistory.getRedo(); index as i"
+              class="history-button-inactive" [attr.data-index]="i + 1">
+        {{undoButtonSnapshot(undoHistory.getRedo()[undoHistory.getRedo().length - i - 1], b)}}
+      </button>
+      <br/>
     </div>
   </div>
 </div>
-
-<div class="preview" #preview [ngStyle]="{whiteSpace: 'pre-line'}">
-  <p></p>
-  <svg class="preview-canvas">
-  </svg>
-</div>
-
