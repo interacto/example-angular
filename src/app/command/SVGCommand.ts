@@ -8,10 +8,13 @@ export abstract class SVGCommand extends UndoableCommand {
   }
 
   public getVisualSnapshot(): SVGElement {
+    /**
+     * Angular call this method multiple times to refresh the page.
+     * So caching the snapshot
+     */
     if(this.cacheSnap === undefined) {
       this.cacheSnap = this.svgdoc.cloneNode(true) as SVGElement;
     }
-    // console.log(this.cacheSnap);
     return this.cacheSnap;
   }
 }
