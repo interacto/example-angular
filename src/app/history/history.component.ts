@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, Input, Optional, ViewChild} from '@angular/core';
 import {Bindings, RedoNTimes, Undoable, UndoHistory, UndoNTimes} from 'interacto';
 
 @Component({
@@ -13,8 +13,17 @@ export class HistoryComponent implements AfterViewInit {
   @ViewChild('redoButtonContainer')
   public redoButtonContainer: ElementRef<HTMLElement>;
 
-  // @ViewChild('baseStateButton')
-  // public baseStateButton: HTMLButtonElement;
+  @Input()
+  @Optional()
+  public svgViewportWidth: number = 50;
+
+  @Input()
+  @Optional()
+  public svgViewportHeight: number = 50;
+
+  @Input()
+  @Optional()
+  public svgIconSize: number = 50;
 
 
   public constructor(public undoHistory: UndoHistory, public bindings: Bindings) {
@@ -22,12 +31,6 @@ export class HistoryComponent implements AfterViewInit {
 
 
   public ngAfterViewInit(): void {
-    // this.bindings.buttonBinder()
-    //   .on(this.baseStateButton)
-    //   .toProduce(() => new UndoNTimes(this.undoHistory, this.undoHistory.getUndo().length))
-    //   .log(LogLevel.usage) // Usage logs are automatically sent to the back-end for this binding
-    //   .bind();
-
     this.bindings.buttonBinder()
       .onDynamic(this.undoButtonContainer)
       .toProduce(i => new UndoNTimes(
@@ -58,13 +61,14 @@ export class HistoryComponent implements AfterViewInit {
     if (snapshot instanceof SVGElement) {
       button.querySelectorAll('div')[0]?.remove();
 
+      const size = `${this.svgIconSize}px`;
       const div = document.createElement("div");
       div.appendChild(snapshot);
-      div.style.width = "50px";
-      div.style.height = "50px";
-      snapshot.setAttribute("viewBox", "0 0 2000 1200");
-      snapshot.setAttribute("width", "50px");
-      snapshot.setAttribute("height", "50px");
+      div.style.width = size;
+      div.style.height = size;
+      snapshot.setAttribute("viewBox", `0 0 ${this.svgViewportWidth} ${this.svgViewportHeight}`);
+      snapshot.setAttribute("width", size);
+      snapshot.setAttribute("height", size);
       button.querySelectorAll('div')[0]?.remove();
       button.appendChild(div);
       return command.getUndoName();
