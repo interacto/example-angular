@@ -16,6 +16,10 @@
   user-select: none; /* Non-prefixed version, currently supported by Chrome, Edge, Opera and Firefox */
 }
 
+.card-elt {
+  pointer-events: none;
+}
+
 .cards-block {
   min-width: 33%;
   min-height: 50px;

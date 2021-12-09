@@ -6,7 +6,6 @@
   top: 0;
   left: 0;
   overflow-x: hidden;
-  background-color: #d6d6d6;
   border-right-style: solid;
   border-width: medium;
   overflow-y: auto;
@@ -39,7 +38,6 @@
   color: black;
   background-color: white;
   border-width: thin;
-  font-family: 'Josefin Sans', sans-serif;
   font-size: 20px;
 }
 
@@ -50,7 +48,6 @@
   color: black;
   background-color: white;
   border-width: thin;
-  font-family: 'Josefin Sans', sans-serif;
 }
 
 .history-button-inactive {
@@ -60,7 +57,6 @@
   color: lightgray;
   background-color: gray;
   border-width: thin;
-  font-family: 'Josefin Sans', sans-serif;
 }
 
 .header button:disabled {
@@ -70,6 +66,5 @@
   color: black;
   background-color: lightgray;
   border-width: thin;
-  font-family: 'Josefin Sans', sans-serif;
   font-size: 20px;
 }

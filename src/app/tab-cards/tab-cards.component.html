@@ -2,11 +2,11 @@
 
 <div class="cards-block" #cards1>
   <mat-card *ngFor="let card of dataService.cards1" class="cards">
-    <mat-card-header>
+    <mat-card-header class="card-elt">
       <mat-card-title>{{card.title}}</mat-card-title>
       <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
+    <mat-card-content class="card-elt">
       <p>
         {{card.text}}
       </p>
@@ -16,11 +16,11 @@
 
 <div class="cards-block" #cards2>
   <mat-card *ngFor="let card of dataService.cards2" class="cards">
-    <mat-card-header>
+    <mat-card-header class="card-elt">
       <mat-card-title>{{card.title}}</mat-card-title>
       <mat-card-subtitle>{{card.subTitle}}</mat-card-subtitle>
     </mat-card-header>
-    <mat-card-content>
+    <mat-card-content class="card-elt">
       <p>
         {{card.text}}
       </p>
