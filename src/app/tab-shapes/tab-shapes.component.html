@@ -1,15 +1,24 @@
+<div style="width: 100%; height: 93%">
+<as-split direction="horizontal" (dragEnd)="moveSplitPane(h)">
+  <as-split-area #h [size]="20">
+    <!--<io-linear-history [svgIconSize]="50"></io-linear-history>-->
+    <app-tree-history #treeComp style="height: 80%" [style.width]="widthHistory">
+    </app-tree-history>
+  </as-split-area>
 
-<app-history [svgIconSize]="50" [svgViewportWidth]="2000" [svgViewportHeight]="1200"></app-history>
+  <as-split-area [size]="80">
+    <p>
+      Multi-touch (two touches) creates a rectangle.<br/>
+      Three taps changes the color of the targeted rectangle.<br/>
+      A long touch (2 seconds) removes the targeted rectangle.<br/>
+      Swipe horizontally to clear all the SVG shapes.<br/>
+    </p>
+    <br/>
 
-<p>
-  Multi-touch (two touches) creates a rectangle.<br/>
-  Three taps changes the color of the targeted rectangle.<br/>
-  A long touch (2 seconds) removes the targeted rectangle.<br/>
-  Swipe horizontally to clear all the SVG shapes.<br/>
-</p>
-<br/>
-
-<div id="canvas-container">
-  <svg tabindex="0" #canvas width="2000" height="1200">
-  </svg>
+    <div id="canvas-container">
+      <svg tabindex="0" #canvas width="100%" height="100%">
+      </svg>
+    </div>
+  </as-split-area>
+</as-split>
 </div>

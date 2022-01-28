@@ -1,7 +1,11 @@
+<as-split direction="horizontal">
+  <as-split-area #h [size]="20">
+    <io-linear-history></io-linear-history>
+  </as-split-area>
 
-<app-history></app-history>
-
-<textarea [ioWidget]="writeTextBinder" rows="4" cols="50" value="{{dataService.txt}}"></textarea>
-<br/>
-<button [ioWidget]="clearClicksBinder" class="clearTextButton">Clear text</button>
-<br/><br/>
+  <as-split-area [size]="80">
+    <textarea [ioTextarea]="writeTextBinder" rows="16" cols="100" value="{{dataService.txt}}"></textarea>
+    <br/>
+    <button [ioButton]="clearClicksBinder" class="clearTextButton">Clear text</button>
+  </as-split-area>
+</as-split>

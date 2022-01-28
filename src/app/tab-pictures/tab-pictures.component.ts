@@ -1,6 +1,6 @@
 import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
-import {Bindings} from 'interacto';
+import {Bindings, UndoHistoryBase} from 'interacto';
 import {ChangeCurrentPicture} from '../command/ChangeCurrentPicture';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 import {Zoom} from '../command/Zoom';
@@ -22,7 +22,7 @@ export class TabPicturesComponent extends TabContentComponent implements OnInit,
 
   // private ctrlPressed: boolean;
 
-  constructor(public dataService: DataService, public bindings: Bindings) {
+  constructor(public dataService: DataService, public bindings: Bindings<UndoHistoryBase>) {
     super();
   }
 

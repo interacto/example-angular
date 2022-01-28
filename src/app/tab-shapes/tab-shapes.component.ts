@@ -1,30 +1,34 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
-import {Bindings, UndoHistory} from 'interacto';
+import {Bindings, TreeUndoHistory, WhenType} from 'interacto';
 import {DrawRect} from '../command/DrawRect';
-import {TabContentComponent} from '../tab-content/tab-content.component';
-import {MoveRect} from '../command/MoveRect';
-import {ChangeColor} from '../command/ChangeColor';
-import {DeleteElt} from '../command/DeleteElt';
-import {DeleteAll} from '../command/DeleteAll';
 import {AppComponent} from '../app.component';
-import {bindingsFactory, undoHistoryFactory} from 'interacto-angular';
+import {interactoTreeUndoProviders} from 'interacto-angular';
+import {TabContentComponent} from '../tab-content/tab-content.component';
+import {TreeHistoryComponent} from '../tree-history/tree-history.component';
+import {DeleteElt} from '../command/DeleteElt';
+import {ChangeColor} from '../command/ChangeColor';
+import {DeleteAll} from '../command/DeleteAll';
+import {MoveRect} from '../command/MoveRect';
 
 @Component({
   selector: 'app-tab-shapes',
   templateUrl: './tab-shapes.component.html',
   styleUrls: ['./tab-shapes.component.css'],
-  // This providers is optional. It permits to have a specific Bindings and thus a specific UndoHistory for this
+  // This provider is optional. It permits to have a specific Bindings and thus a specific UndoHistory for this
   // component. Useful when you want to have different undo histories.
-  providers: [
-    {provide: Bindings, useFactory: bindingsFactory},
-    {provide: UndoHistory, useFactory: undoHistoryFactory, deps: [Bindings]}]
+  providers: [interactoTreeUndoProviders()]
 })
 export class TabShapesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
 
-  public constructor(public dataService: DataService, public undoHistory: UndoHistory, public bindings: Bindings,
+  @ViewChild('treeComp')
+  private treeComp: TreeHistoryComponent;
+
+  public widthHistory: string = '20%';
+
+  public constructor(public dataService: DataService, public undoHistory: TreeUndoHistory, public bindings: Bindings<TreeUndoHistory>,
                      private appComponent: AppComponent) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
@@ -33,19 +37,28 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     // it most of the time since this.bindings.undoHistory returns the same instance).
   }
 
-  ngAfterViewInit(): void {
+  public ngAfterViewInit(): void {
+    // Removing the context menu
+    this.canvas.nativeElement.addEventListener("touchstart", evt => {
+      evt.preventDefault();
+    })
+
+    this.treeComp.svgViewportWidth = this.canvas.nativeElement.clientWidth;
+    this.treeComp.svgViewportHeight = this.canvas.nativeElement.clientHeight;
+
     const drawrect = new DrawRect(this.canvas.nativeElement);
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
 
     this.bindings.reciprocalDndBinder(this.appComponent.handle, this.appComponent.spring)
-      .onDynamic(this.canvas)
+      .on(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
       })
-      .when(i => i.tgt.currentTarget !== this.canvas.nativeElement)
+      // Must stop immediately if the touch does not concern a rectangle
+      .when(i => i.tgt.target !== this.canvas.nativeElement, WhenType.strictStart)
       .continuousExecution()
       .bind();
 
@@ -56,6 +69,12 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
       })
+      // Cannot start if multi points are used (ie if more than one point is currently used)
+      .when(i => i.src.allTouches.length == 1, WhenType.strictStart)
+      // Cannot ends if multi points are used (ie if it remains more than 0 point)
+      .when(i => i.tgt.allTouches.length == 0, WhenType.end)
+      // Cannot continue if multi points are used (ie if more than one point is currently used)
+      .when(i => i.tgt.allTouches.length == 1, WhenType.strictThen)
       .continuousExecution()
       .bind();
 
@@ -63,7 +82,6 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
       .onDynamic(this.canvas)
       .when(i => i.target !== this.canvas.nativeElement)
-      // Prevents the deletion from occurring when dragging the shape
       // Prevents the context menu from popping up
       .preventDefault()
       .bind();
@@ -71,9 +89,8 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     this.bindings.tapBinder(3)
       .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement, this.canvas.nativeElement))
       .onDynamic(this.canvas)
-      .when(i => i.taps[0].target !== this.canvas.nativeElement)
       // Does not continue to run if the first targeted node is not an SVG element
-      .strictStart()
+      .when(i => i.taps[0].target !== this.canvas.nativeElement, WhenType.strictStart)
       .bind();
 
     this.bindings.multiTouchBinder(2)
@@ -86,6 +103,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
           Math.max(...i.touches.map(touch => touch.tgt.clientX)) - boundary.x,
           Math.max(...i.touches.map(touch => touch.tgt.clientY)) - boundary.y);
       })
+      // .when(i => i.touches[0].src.target === this.canvas.nativeElement, WhenType.strictStart)
       .continuousExecution()
       .bind();
 
@@ -95,5 +113,9 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .when(i => i.touches[0].src.target === this.canvas.nativeElement)
       .continuousExecution()
       .bind();
+  }
+
+  public moveSplitPane(pane: HTMLElement): void {
+    this.widthHistory = `${pane.clientWidth}px`;
   }
 }

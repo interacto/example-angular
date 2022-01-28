@@ -1,18 +1,15 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {CardData, DataService} from '../service/data.service';
-import {Bindings, TransferArrayItem, UndoHistory} from 'interacto';
-import {TabContentComponent} from '../tab-content/tab-content.component';
-import {bindingsFactory, undoHistoryFactory} from 'interacto-angular';
+import {Bindings, TransferArrayItem, UndoHistoryBase} from 'interacto';
+import {interactoProviders} from 'interacto-angular';
 
 @Component({
   selector: 'app-tab-cards',
   templateUrl: './tab-cards.component.html',
   styleUrls: ['./tab-cards.component.css'],
-  providers: [
-    {provide: Bindings, useFactory: bindingsFactory},
-    {provide: UndoHistory, useFactory: undoHistoryFactory, deps: [Bindings]}]
+  providers: [interactoProviders()]
 })
-export class TabCardsComponent extends TabContentComponent implements AfterViewInit {
+export class TabCardsComponent implements AfterViewInit {
   @ViewChild('cards1')
   public cards1: ElementRef<HTMLDivElement>;
 
@@ -25,8 +22,7 @@ export class TabCardsComponent extends TabContentComponent implements AfterViewI
   public card: HTMLElement | null;
   public sourceIndex: number;
 
-  public constructor(public dataService: DataService, public bindings: Bindings) {
-    super();
+  public constructor(public dataService: DataService, public bindings: Bindings<UndoHistoryBase>) {
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject

@@ -1,18 +1,16 @@
 import {Component} from '@angular/core';
-import {Bindings, LogLevel, PartialButtonBinder, PartialTextInputBinder, UndoHistory} from 'interacto';
+import {LogLevel, PartialButtonBinder, PartialTextInputBinder} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
+import {interactoProviders} from 'interacto-angular';
 import {TabContentComponent} from '../tab-content/tab-content.component';
-import {bindingsFactory, undoHistoryFactory} from 'interacto-angular';
 
 @Component({
   selector: 'app-tab-text',
   templateUrl: './tab-text.component.html',
   styleUrls: ['./tab-text.component.css'],
-  providers: [
-    {provide: Bindings, useFactory: bindingsFactory},
-    {provide: UndoHistory, useFactory: undoHistoryFactory, deps: [Bindings]}]
+  providers: [interactoProviders()]
 })
 export class TabTextComponent extends TabContentComponent {
 
