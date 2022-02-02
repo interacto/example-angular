@@ -38,7 +38,7 @@ export class DrawRect extends SVGCommand {
     this.svgdoc.appendChild(this.rec);
   }
 
-  public getUndoName(): string {
+  public override getUndoName(): string {
     return 'Draw Rectangle';
   }
 }

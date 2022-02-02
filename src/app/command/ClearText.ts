@@ -8,7 +8,7 @@ export class ClearText extends UndoableCommand {
         super();
     }
 
-    protected createMemento(): void {
+    protected override createMemento(): void {
         this.memento = this.data.txt;
     }
 
@@ -24,7 +24,7 @@ export class ClearText extends UndoableCommand {
         this.execution();
     }
 
-    public getUndoName(): string {
+    public override getUndoName(): string {
         return 'Clear text';
     }
 }

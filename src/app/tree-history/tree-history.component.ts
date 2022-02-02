@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, HostBinding, Input} from '@angular/core';
+import {Component, HostBinding, Input} from '@angular/core';
 import {Binding, PartialPointBinder, TreeUndoHistory, UndoableTreeNode} from 'interacto';
 
 @Component({
@@ -6,7 +6,7 @@ import {Binding, PartialPointBinder, TreeUndoHistory, UndoableTreeNode} from 'in
   templateUrl: './tree-history.component.html',
   styleUrls: ['./tree-history.component.css']
 })
-export class TreeHistoryComponent implements AfterViewInit {
+export class TreeHistoryComponent {
   @Input()
   public width?: string;
 
@@ -23,13 +23,6 @@ export class TreeHistoryComponent implements AfterViewInit {
   widthcss: string;
 
   public constructor(public history: TreeUndoHistory) {
-  }
-
-  public ngAfterViewInit(): void {
-    // if(this.width !== undefined) {
-    //   this.widthcss = this.width ?? "";
-    //   this.widthcss = 2;
-    // }
   }
 
   public depth(undoableNode: UndoableTreeNode | undefined): number {

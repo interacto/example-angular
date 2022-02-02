@@ -10,7 +10,7 @@ export class DeleteElt extends UndoableCommand {
     this.redo();
   }
 
-  public getUndoName(): string {
+  public override getUndoName(): string {
     return 'Delete SVG element';
   }
 

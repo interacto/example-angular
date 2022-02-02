@@ -19,7 +19,7 @@ export class ChangeCurrentPicture extends CommandBase {
   }
 
   // If the targeted index doesn't exist in the picture collection, the command cannot execute
-  canExecute(): boolean {
+  override canExecute(): boolean {
     if (this.moveForward) {
       return this.dataService.currentPicture < this.dataService.pictures.length - 1;
     } else {

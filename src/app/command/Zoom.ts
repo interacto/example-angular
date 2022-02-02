@@ -23,7 +23,7 @@ export class Zoom extends CommandBase {
   }
 
   // Allows execution if the projected zoom level doesn't exceed limits
-  canExecute(): boolean {
+  override canExecute(): boolean {
     return (this.delta > 0 && this.currentZoom + this.delta * this.speed < this.maxZoom) ||
       (this.delta < 0 && this.currentZoom + this.delta * this.speed > this.minZoom);
   }

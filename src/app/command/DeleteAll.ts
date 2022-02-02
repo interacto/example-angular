@@ -8,7 +8,7 @@ export class DeleteAll extends SVGCommand {
     this.mementoContent = [];
   }
 
-  protected createMemento(): void {
+  protected override createMemento(): void {
     this.mementoContent = Array.from(this.svgdoc.children);
   }
 
@@ -16,7 +16,7 @@ export class DeleteAll extends SVGCommand {
     this.redo();
   }
 
-  public getUndoName(): string {
+  public override getUndoName(): string {
     return 'Delete all the SVG elements';
   }
 

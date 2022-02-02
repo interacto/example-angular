@@ -7,7 +7,7 @@ export abstract class SVGCommand extends UndoableCommand {
     super();
   }
 
-  public getVisualSnapshot(): SVGElement {
+  public override getVisualSnapshot(): SVGElement {
     /**
      * Angular call this method multiple times to refresh the page.
      * So caching the snapshot

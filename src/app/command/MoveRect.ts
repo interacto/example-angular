@@ -10,7 +10,7 @@ export class MoveRect extends SVGCommand {
   public vectorX: number;
   public vectorY: number;
 
-  protected createMemento() {
+  protected override createMemento() {
     this.mementoX = this.rec.x.baseVal.value;
     this.mementoY = this.rec.y.baseVal.value;
   }
@@ -29,7 +29,7 @@ export class MoveRect extends SVGCommand {
     this.rec.setAttribute('y', String(this.mementoY));
   }
 
-  public getUndoName(): string {
+  public override getUndoName(): string {
     return 'Move rectangle';
   }
 }

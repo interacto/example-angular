@@ -8,7 +8,7 @@ export class ChangeColor extends SVGCommand {
     super(svgdoc);
   }
 
-  protected createMemento(): void {
+  protected override createMemento(): void {
     this.mementoColor = this.svgElt.getAttribute('fill');
   }
 
@@ -30,7 +30,7 @@ export class ChangeColor extends SVGCommand {
     this.svgElt.setAttribute('fill', this.newColor);
   }
 
-  public getUndoName(): string {
+  public override getUndoName(): string {
     return 'Change color';
   }
 }

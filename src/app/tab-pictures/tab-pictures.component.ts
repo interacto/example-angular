@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {DataService} from '../service/data.service';
 import {Bindings, UndoHistoryBase} from 'interacto';
 import {ChangeCurrentPicture} from '../command/ChangeCurrentPicture';
@@ -10,7 +10,7 @@ import {Zoom} from '../command/Zoom';
   templateUrl: './tab-pictures.component.html',
   styleUrls: ['./tab-pictures.component.css']
 })
-export class TabPicturesComponent extends TabContentComponent implements OnInit, AfterViewInit {
+export class TabPicturesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('carousel')
   private carousel: ElementRef<HTMLDivElement>;
 
@@ -24,9 +24,6 @@ export class TabPicturesComponent extends TabContentComponent implements OnInit,
 
   constructor(public dataService: DataService, public bindings: Bindings<UndoHistoryBase>) {
     super();
-  }
-
-  ngOnInit(): void {
   }
 
   ngAfterViewInit(): void {

@@ -8,7 +8,7 @@ export class SetText extends UndoableCommand {
         super();
     }
 
-    protected createMemento(): void {
+    protected override createMemento(): void {
         this.memento = this.data.txt;
     }
 
@@ -16,7 +16,7 @@ export class SetText extends UndoableCommand {
         this.data.txt = this.newText!;
     }
 
-    public canExecute(): boolean {
+    public override canExecute(): boolean {
         return this.newText !== undefined;
     }
 
@@ -32,11 +32,11 @@ export class SetText extends UndoableCommand {
         this.execution();
     }
 
-    public getUndoName(): string {
+    public override getUndoName(): string {
         return 'Set text';
     }
 
-    public getVisualSnapshot(): SVGElement | string | undefined {
+    public override getVisualSnapshot(): SVGElement | string | undefined {
       return this.newText;
     }
 }
