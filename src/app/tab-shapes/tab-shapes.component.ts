@@ -51,14 +51,20 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     drawrect.execute();
 
     this.bindings.reciprocalDndBinder(this.appComponent.handle, this.appComponent.spring)
-      .on(this.canvas)
+      .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
+      .first((_, i) => {
+        (i.src.target as HTMLElement).style.cursor = 'pointer';
+      })
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
       })
+      .endOrCancel(i => {
+        (i.src.target as HTMLElement).style.cursor = 'default';
+      })
       // Must stop immediately if the touch does not concern a rectangle
-      .when(i => i.tgt.target !== this.canvas.nativeElement, WhenType.strictStart)
+      .when(i => i.tgt.button === 0)
       .continuousExecution()
       .bind();
 
@@ -111,7 +117,6 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .toProduce(() => new DeleteAll(this.canvas.nativeElement))
       .on(this.canvas)
       .when(i => i.touches[0].src.target === this.canvas.nativeElement)
-      .continuousExecution()
       .bind();
   }
 
