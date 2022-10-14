@@ -1,15 +1,14 @@
-import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
-import {DataService} from '../service/data.service';
-import {Bindings, TreeUndoHistory, WhenType} from 'interacto';
-import {DrawRect} from '../command/DrawRect';
-import {AppComponent} from '../app.component';
-import {interactoTreeUndoProviders} from 'interacto-angular';
-import {TabContentComponent} from '../tab-content/tab-content.component';
-import {TreeHistoryComponent} from '../tree-history/tree-history.component';
-import {DeleteElt} from '../command/DeleteElt';
-import {ChangeColor} from '../command/ChangeColor';
-import {DeleteAll} from '../command/DeleteAll';
-import {MoveRect} from '../command/MoveRect';
+import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { Bindings, TreeUndoHistory, WhenType } from 'interacto';
+import { interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
+import { AppComponent } from '../app.component';
+import { ChangeColor } from '../command/ChangeColor';
+import { DeleteAll } from '../command/DeleteAll';
+import { DeleteElt } from '../command/DeleteElt';
+import { DrawRect } from '../command/DrawRect';
+import { MoveRect } from '../command/MoveRect';
+import { DataService } from '../service/data.service';
+import { TabContentComponent } from '../tab-content/tab-content.component';
 
 @Component({
   selector: 'app-tab-shapes',
