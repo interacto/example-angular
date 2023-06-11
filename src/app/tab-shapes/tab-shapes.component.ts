@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { Bindings, TreeUndoHistory, WhenType } from 'interacto';
+import { Bindings, TreeUndoHistory } from 'interacto';
 import { interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
 import { AppComponent } from '../app.component';
 import { ChangeColor } from '../command/ChangeColor';
@@ -75,11 +75,11 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
         c.vectorY = i.diffClientY;
       })
       // Cannot start if multi points are used (ie if more than one point is currently used)
-      .when(i => i.src.allTouches.length == 1, WhenType.strictStart)
+      .when(i => i.src.allTouches.length == 1, 'strictStart')
       // Cannot ends if multi points are used (ie if it remains more than 0 point)
-      .when(i => i.tgt.allTouches.length == 0, WhenType.end)
+      .when(i => i.tgt.allTouches.length == 0, 'end')
       // Cannot continue if multi points are used (ie if more than one point is currently used)
-      .when(i => i.tgt.allTouches.length == 1, WhenType.strictThen)
+      .when(i => i.tgt.allTouches.length == 1, 'strictThen')
       .continuousExecution()
       .bind();
 
@@ -95,7 +95,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement, this.canvas.nativeElement))
       .onDynamic(this.canvas)
       // Does not continue to run if the first targeted node is not an SVG element
-      .when(i => i.taps[0].target !== this.canvas.nativeElement, WhenType.strictStart)
+      .when(i => i.taps[0].target !== this.canvas.nativeElement, 'strictStart')
       .bind();
 
     this.bindings.multiTouchBinder(2)

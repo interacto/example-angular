@@ -39,7 +39,7 @@ export class TabCardsComponent implements AfterViewInit {
         return new TransferArrayItem<CardData>([], [], -1, 0, 'Drag card');
       })
       // Checks if the user picked a valid card, and a new list for the card as a destination
-      .when(i => (i.src.target as Element).classList.contains('mat-card'))
+      .when(i => (i.src.target as Element).classList.contains('cards'))
       .first((_, i) => {
         this.card = (i.src.target as HTMLElement);
         this.sourceIndex = Array.prototype.indexOf.call(this.card!.parentNode?.children ?? [], this.card);

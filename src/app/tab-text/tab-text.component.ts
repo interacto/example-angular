@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {LogLevel, PartialButtonBinder, PartialTextInputBinder} from 'interacto';
+import {PartialButtonBinder, PartialTextInputBinder} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
@@ -26,7 +26,7 @@ export class TabTextComponent extends TabContentComponent {
   clearClicksBinder(binder: PartialButtonBinder): void {
     binder
       .toProduce(() => new ClearText(this.dataService))
-      .log(LogLevel.usage) // Usage logs are automatically sent to the back-end for this binding
+      .log('usage') // Usage logs are automatically sent to the back-end for this binding
       .bind();
   }
 
