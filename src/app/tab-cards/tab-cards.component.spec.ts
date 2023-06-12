@@ -2,6 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TabCardsComponent } from './tab-cards.component';
 import {InteractoModule} from 'interacto-angular';
+import { AngularSplitModule } from 'angular-split';
+import { MatCardModule } from '@angular/material/card';
 
 describe('TabCardsComponent', () => {
   let component: TabCardsComponent;
@@ -11,8 +13,10 @@ describe('TabCardsComponent', () => {
     await TestBed.configureTestingModule({
       declarations: [ TabCardsComponent ],
       imports: [
-        InteractoModule
-      ]
+        InteractoModule,
+        AngularSplitModule,
+        MatCardModule
+      ],
     })
     .compileComponents();
   });

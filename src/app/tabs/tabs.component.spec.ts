@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { TabsComponent } from './tabs.component';
+import { MockComponent } from 'ng-mocks';
+import { TabComponent } from '../tab/tab.component';
 
 describe('TabsComponent', () => {
   let component: TabsComponent;
@@ -8,7 +10,10 @@ describe('TabsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TabsComponent ]
+      declarations: [
+        TabsComponent,
+        MockComponent(TabComponent)
+      ]
     })
     .compileComponents();
   });

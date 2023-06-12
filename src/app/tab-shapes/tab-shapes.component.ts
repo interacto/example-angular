@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Bindings, TreeUndoHistory } from 'interacto';
 import { interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
-import { AppComponent } from '../app.component';
 import { ChangeColor } from '../command/ChangeColor';
 import { DeleteAll } from '../command/DeleteAll';
 import { DeleteElt } from '../command/DeleteElt';
@@ -9,6 +8,7 @@ import { DrawRect } from '../command/DrawRect';
 import { MoveRect } from '../command/MoveRect';
 import { DataService } from '../service/data.service';
 import { TabContentComponent } from '../tab-content/tab-content.component';
+import { DwellSpringComponent } from '../dwell-spring/dwell-spring.component';
 
 @Component({
   selector: 'app-tab-shapes',
@@ -25,10 +25,12 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
   @ViewChild('treeComp')
   private treeComp: TreeHistoryComponent;
 
+  @ViewChild('dwell')
+  private dwellSpring: DwellSpringComponent;
+
   public widthHistory: string = '20%';
 
-  public constructor(public dataService: DataService, public undoHistory: TreeUndoHistory, public bindings: Bindings<TreeUndoHistory>,
-                     private appComponent: AppComponent) {
+  public constructor(public dataService: DataService, public undoHistory: TreeUndoHistory, public bindings: Bindings<TreeUndoHistory>) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
@@ -49,7 +51,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
 
-    this.bindings.reciprocalDndBinder(this.appComponent.handle, this.appComponent.spring)
+    this.bindings.reciprocalDndBinder(this.dwellSpring.handle, this.dwellSpring.spring)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .first((_, i) => {
@@ -67,7 +69,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .continuousExecution()
       .bind();
 
-    this.bindings.reciprocalTouchDnDBinder(this.appComponent.handle, this.appComponent.spring)
+    this.bindings.reciprocalTouchDnDBinder(this.dwellSpring.handle, this.dwellSpring.spring)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .then((c, i) => {

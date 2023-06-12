@@ -7,7 +7,9 @@ import {TabComponent} from '../tab/tab.component';
   styleUrls: ['./tabs.component.css']
 })
 export class TabsComponent implements AfterContentInit {
-  @ContentChildren(TabComponent) tabs: QueryList<TabComponent>;
+  @ContentChildren(TabComponent)
+  tabs: QueryList<TabComponent>;
+
   constructor() { }
 
   ngAfterContentInit(): void {
@@ -15,7 +17,7 @@ export class TabsComponent implements AfterContentInit {
     const activeTabs = this.tabs.filter((tab) => tab.active);
 
     // If there is no active tab set, activates the first
-    if (activeTabs.length === 0) {
+    if (activeTabs.length === 0 && this.tabs.length > 0) {
       this.selectTab(this.tabs.first);
     }
   }

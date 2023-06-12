@@ -2,6 +2,10 @@ import {ComponentFixture, fakeAsync, TestBed, tick} from '@angular/core/testing'
 
 import {TabTextComponent} from './tab-text.component';
 import {robot} from 'interacto-nono';
+import { DataService } from '../service/data.service';
+import { MockProvider } from 'ng-mocks';
+import { AngularSplitModule } from 'angular-split';
+import { InteractoModule } from 'interacto-angular';
 
 describe('TabTextComponent', () => {
   let component: TabTextComponent;
@@ -9,7 +13,14 @@ describe('TabTextComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ TabTextComponent ]
+      declarations: [ TabTextComponent ],
+      imports: [
+        AngularSplitModule,
+        InteractoModule
+      ],
+      providers: [
+        MockProvider(DataService)
+      ]
     })
     .compileComponents();
   });

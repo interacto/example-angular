@@ -2,6 +2,10 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {TabShapesComponent} from './tab-shapes.component';
 import {InteractoModule} from 'interacto-angular';
+import { AngularSplitModule } from 'angular-split';
+import { DataService } from '../service/data.service';
+import { MockProvider } from 'ng-mocks';
+import { DwellSpringComponent } from '../dwell-spring/dwell-spring.component';
 
 describe('TabShapesComponent', () => {
   let component: TabShapesComponent;
@@ -10,10 +14,16 @@ describe('TabShapesComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       declarations: [
-        TabShapesComponent
+        TabShapesComponent,
+        DwellSpringComponent
       ],
       imports: [
-        InteractoModule
+        InteractoModule,
+        AngularSplitModule
+      ],
+      providers: [
+        MockProvider(DataService),
+        DwellSpringComponent
       ]
     })
     .compileComponents();
