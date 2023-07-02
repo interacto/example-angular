@@ -19,7 +19,6 @@ export class TabCardsComponent implements AfterViewInit {
   public mementoX: string;
   public mementoY: string;
   public mementoCSSPosition: string;
-  public card: HTMLElement | null;
   public sourceIndex: number;
 
   public constructor(public dataService: DataService, public bindings: Bindings<UndoHistoryBase>) {
@@ -41,20 +40,21 @@ export class TabCardsComponent implements AfterViewInit {
       // Checks if the user picked a valid card, and a new list for the card as a destination
       .when(i => (i.src.target as Element).classList.contains('cards'))
       .first((_, i) => {
-        this.card = (i.src.target as HTMLElement);
-        this.sourceIndex = Array.prototype.indexOf.call(this.card!.parentNode?.children ?? [], this.card);
+        const card = i.src.target as HTMLElement;
+        this.sourceIndex = Array.prototype.indexOf.call(card.parentNode?.children ?? [], card);
         // Saves the initial state of the card's style to be able to restore it if the command can't be executed
-        this.mementoX = this.card.style.left;
-        this.mementoY = this.card.style.top;
-        this.mementoCSSPosition = this.card.style.position;
+        this.mementoX = card.style.left;
+        this.mementoY = card.style.top;
+        this.mementoCSSPosition = card.style.position;
 
-        this.card.style.position = 'relative';
-        this.card.style.zIndex = '999';
+        card.style.position = 'relative';
+        card.style.zIndex = '999';
 
       })
       .then((c, i) => {
-        this.card!.style.left = `${i.diffClientX}px`;
-        this.card!.style.top = `${i.diffClientY}px`;
+        const card = i.src.target as HTMLElement;
+        card.style.left = `${i.diffClientX}px`;
+        card.style.top = `${i.diffClientY}px`;
         c.srcIndex = this.sourceIndex;
 
         if (this.insideRectangle(this.cards2.nativeElement.getBoundingClientRect(), i.tgt.clientX, i.tgt.clientY) &&
@@ -72,15 +72,17 @@ export class TabCardsComponent implements AfterViewInit {
         }
       })
       // Resets the position of the card if the command is invalid or cancelled
-      .ifCannotExecute(() => {
-        this.card!.style.left = this.mementoX;
-        this.card!.style.top = this.mementoY;
-        this.card!.style.position = this.mementoCSSPosition;
+      .ifCannotExecute((_, i) => {
+        const card = i.src.target as HTMLElement;
+        card.style.left = this.mementoX;
+        card.style.top = this.mementoY;
+        card.style.position = this.mementoCSSPosition;
       })
-      .cancel(() => {
-        this.card!.style.left = this.mementoX;
-        this.card!.style.top = this.mementoY;
-        this.card!.style.position = this.mementoCSSPosition;
+      .cancel(i => {
+        const card = i.src.target as HTMLElement;
+        card.style.left = this.mementoX;
+        card.style.top = this.mementoY;
+        card.style.position = this.mementoCSSPosition;
       })
       .bind();
   }
