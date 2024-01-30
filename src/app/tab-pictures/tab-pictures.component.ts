@@ -17,10 +17,6 @@ export class TabPicturesComponent extends TabContentComponent implements AfterVi
   @ViewChild('container')
   private container: ElementRef<HTMLDivElement>;
 
-  // @ViewChildren('picture')
-  // private pictures: QueryList<ElementRef<HTMLImageElement>>;
-
-  // private ctrlPressed: boolean;
 
   constructor(public dataService: DataService, public bindings: Bindings<UndoHistoryBase>) {
     super();

@@ -7,7 +7,8 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "lint": "ng lint"
+    "lint": "ng lint",
+    "cleancache": "(rm -rf .angular)"
   },
   "private": true,
   "dependencies": {
@@ -22,8 +23,8 @@
     "@angular/platform-browser-dynamic": "16.0.5",
     "@angular/router": "16.0.5",
     "angular-split": "15.0.0",
-    "interacto": "7.4.0",
-    "interacto-angular": "7.16.0",
+    "interacto": "8.0.0",
+    "interacto-angular": "8.16.1",
     "rxjs": "7.8.1",
     "tslib": "2.4.0",
     "zone.js": "0.13.0"
@@ -42,7 +43,7 @@
     "@typescript-eslint/eslint-plugin": "5.59.9",
     "@typescript-eslint/parser": "5.59.9",
     "eslint": "8.42.0",
-    "interacto-nono": "0.4.0",
+    "interacto-nono": "0.5.0",
     "jasmine-core": "4.6.0",
     "jest": "29.5.0",
     "jest-environment-jsdom": "29.5.0",

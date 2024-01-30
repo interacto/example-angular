@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Bindings, TreeUndoHistory } from 'interacto';
-import { interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
+import { DwellSpringComponent, interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
 import { ChangeColor } from '../command/ChangeColor';
 import { DeleteAll } from '../command/DeleteAll';
 import { DeleteElt } from '../command/DeleteElt';
@@ -8,7 +8,6 @@ import { DrawRect } from '../command/DrawRect';
 import { MoveRect } from '../command/MoveRect';
 import { DataService } from '../service/data.service';
 import { TabContentComponent } from '../tab-content/tab-content.component';
-import { DwellSpringComponent } from '../dwell-spring/dwell-spring.component';
 
 @Component({
   selector: 'app-tab-shapes',
@@ -42,7 +41,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     // Removing the context menu
     this.canvas.nativeElement.addEventListener("touchstart", evt => {
       evt.preventDefault();
-    })
+    });
 
     this.treeComp.svgViewportWidth = this.canvas.nativeElement.clientWidth;
     this.treeComp.svgViewportHeight = this.canvas.nativeElement.clientHeight;
@@ -65,27 +64,27 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
         (i.src.target as HTMLElement).style.cursor = 'default';
       })
       // Must stop immediately if the touch does not concern a rectangle
-      .when(i => i.tgt.button === 0)
+      .when(i => !("button" in i.tgt) || i.tgt.button === 0)
       .continuousExecution()
       .bind();
 
-    this.bindings.reciprocalTouchDnDBinder(this.dwellSpring.handle, this.dwellSpring.spring)
+    this.bindings.touchDnDBinder(true)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .then((c, i) => {
         c.vectorX = i.diffClientX;
         c.vectorY = i.diffClientY;
       })
-      // Cannot start if multi points are used (ie if more than one point is currently used)
-      .when(i => i.src.allTouches.length == 1, 'strictStart')
-      // Cannot ends if multi points are used (ie if it remains more than 0 point)
-      .when(i => i.tgt.allTouches.length == 0, 'end')
-      // Cannot continue if multi points are used (ie if more than one point is currently used)
-      .when(i => i.tgt.allTouches.length == 1, 'strictThen')
+      // // Cannot start if multi points are used (ie if more than one point is currently used)
+      // .when(i => i.src.allTouches.length == 1, 'strictStart')
+      // // Cannot ends if multi points are used (ie if it remains more than 0 point)
+      // .when(i => i.tgt.allTouches.length == 0, 'end')
+      // // Cannot continue if multi points are used (ie if more than one point is currently used)
+      // .when(i => i.tgt.allTouches.length == 1, 'strictThen')
       .continuousExecution()
       .bind();
 
-    this.bindings.longTouchBinder(2000)
+    this.bindings.longpressOrTouchBinder(2000)
       .toProduce(i => new DeleteElt(this.canvas.nativeElement, i.currentTarget as SVGElement))
       .onDynamic(this.canvas)
       .when(i => i.target !== this.canvas.nativeElement)
@@ -93,14 +92,14 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       .preventDefault()
       .bind();
 
-    this.bindings.tapBinder(3)
-      .toProduce(i => new ChangeColor(i.taps[0].currentTarget as SVGElement, this.canvas.nativeElement))
+    this.bindings.tapsOrClicksBinder(3)
+      .toProduce(i => new ChangeColor(i.points[0].currentTarget as SVGElement, this.canvas.nativeElement))
       .onDynamic(this.canvas)
       // Does not continue to run if the first targeted node is not an SVG element
-      .when(i => i.taps[0].target !== this.canvas.nativeElement, 'strictStart')
+      .when(i => i.points[0].target !== this.canvas.nativeElement, 'strictStart')
       .bind();
 
-    this.bindings.multiTouchBinder(2)
+    this.bindings.twoTouchBinder()
       .toProduce(() => new DrawRect(this.canvas.nativeElement as SVGSVGElement))
       .on(this.canvas)
       .then((c, i) => {
@@ -110,14 +109,15 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
           Math.max(...i.touches.map(touch => touch.tgt.clientX)) - boundary.x,
           Math.max(...i.touches.map(touch => touch.tgt.clientY)) - boundary.y);
       })
-      // .when(i => i.touches[0].src.target === this.canvas.nativeElement, WhenType.strictStart)
+      .when(i => i.touches[0].src.target === this.canvas.nativeElement &&
+        i.touches[1].src.target === this.canvas.nativeElement, 'strictStart')
       .continuousExecution()
       .bind();
 
-    this.bindings.swipeBinder(true, 300, 500, 1, 50)
+    this.bindings.panHorizontalBinder(50, false, 500, 300)
       .toProduce(() => new DeleteAll(this.canvas.nativeElement))
       .on(this.canvas)
-      .when(i => i.touches[0].src.target === this.canvas.nativeElement)
+      .when(i => i.src.target === this.canvas.nativeElement)
       .bind();
   }
 

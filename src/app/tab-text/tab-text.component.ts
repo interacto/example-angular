@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {PartialButtonBinder, PartialTextInputBinder} from 'interacto';
+import {PartialButtonTypedBinder, PartialTextInputTypedBinder} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
@@ -23,14 +23,14 @@ export class TabTextComponent extends TabContentComponent {
   // This shows the second way, more in the spirit of Angular, for using binders directly from
   // HTML. This avoids the declaration of properties in the component class for accessing the
   // widgets.
-  clearClicksBinder(binder: PartialButtonBinder): void {
+  clearClicksBinder(binder: PartialButtonTypedBinder): void {
     binder
       .toProduce(() => new ClearText(this.dataService))
       .log('usage') // Usage logs are automatically sent to the back-end for this binding
       .bind();
   }
 
-  writeTextBinder(binder: PartialTextInputBinder): void {
+  writeTextBinder(binder: PartialTextInputTypedBinder): void {
     binder
       .toProduce(() => new SetText(this.dataService))
       .then((c, i) => c.text = i.widget?.value ?? '')

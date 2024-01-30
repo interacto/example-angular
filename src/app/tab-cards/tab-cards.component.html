@@ -3,7 +3,7 @@
     <io-linear-history></io-linear-history>
   </as-split-area>
 
-  <as-split-area [size]="80">
+  <as-split-area [size]="80" #cardsPane>
     <div class="cards-block" #cards1>
       <mat-card *ngFor="let card of dataService.cards1" class="cards">
         <mat-card-header class="card-elt">

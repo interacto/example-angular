@@ -13,7 +13,6 @@ import { TabShapesComponent } from './tab-shapes/tab-shapes.component';
 import { TabTextComponent } from './tab-text/tab-text.component';
 import { TabComponent } from './tab/tab.component';
 import { TabsComponent } from './tabs/tabs.component';
-import { DwellSpringComponent } from './dwell-spring/dwell-spring.component';
 
 @NgModule({
   declarations: [
@@ -24,8 +23,7 @@ import { DwellSpringComponent } from './dwell-spring/dwell-spring.component';
     TabShapesComponent,
     TabCardsComponent,
     TabPicturesComponent,
-    TabContentComponent,
-    DwellSpringComponent
+    TabContentComponent
   ],
   imports: [
     BrowserModule,

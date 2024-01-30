@@ -10,18 +10,16 @@ import {interactoProviders} from 'interacto-angular';
   providers: [interactoProviders()]
 })
 export class TabCardsComponent implements AfterViewInit {
+  @ViewChild('cardsPane')
+  protected pane: ElementRef<HTMLDivElement>;
+
   @ViewChild('cards1')
-  public cards1: ElementRef<HTMLDivElement>;
+  protected cards1: ElementRef<HTMLDivElement>;
 
   @ViewChild('cards2')
-  public cards2: ElementRef<HTMLDivElement>;
+  protected cards2: ElementRef<HTMLDivElement>;
 
-  public mementoX: string;
-  public mementoY: string;
-  public mementoCSSPosition: string;
-  public sourceIndex: number;
-
-  public constructor(public dataService: DataService, public bindings: Bindings<UndoHistoryBase>) {
+  public constructor(protected dataService: DataService, private bindings: Bindings<UndoHistoryBase>) {
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
     // The UndoHistory parameter is also injected and comes from the Bindings instance (so quite useless to inject
@@ -30,32 +28,33 @@ export class TabCardsComponent implements AfterViewInit {
 
   public ngAfterViewInit(): void {
     // This binder creates the command that allows the user to move a card from one list to another
-    this.bindings.dndBinder(true)
-      .on(window.document.body)
-      .toProduce(() => {
+    // Its uses an accumulator: data used in and shared between the routines. Reinit after each interaction execution
+    this.bindings.dndBinder(true, {
+      "mementoX": "",
+      "mementoY": "",
+      "mementoCSSPosition": ""
+    })
+      .on(this.pane)
+      .toProduce(() =>
         // The command is not executable until a proper target destination for the card has been selected by the user
         // The -1 index prevents makes canExecute() return false and prevents Interacto from executing the command
-        return new TransferArrayItem<CardData>([], [], -1, 0, 'Drag card');
-      })
+        new TransferArrayItem<CardData>([], [], -1, 0, 'Drag card')
+      )
       // Checks if the user picked a valid card, and a new list for the card as a destination
       .when(i => (i.src.target as Element).classList.contains('cards'))
-      .first((_, i) => {
+      .first((c, i, acc) => {
         const card = i.src.target as HTMLElement;
-        this.sourceIndex = Array.prototype.indexOf.call(card.parentNode?.children ?? [], card);
-        // Saves the initial state of the card's style to be able to restore it if the command can't be executed
-        this.mementoX = card.style.left;
-        this.mementoY = card.style.top;
-        this.mementoCSSPosition = card.style.position;
-
+        c.srcIndex = Array.prototype.indexOf.call(card.parentNode?.children ?? [], card);
+        acc.mementoX = card.style.left;
+        acc.mementoY = card.style.top;
+        acc.mementoCSSPosition = card.style.position;
         card.style.position = 'relative';
         card.style.zIndex = '999';
-
       })
       .then((c, i) => {
         const card = i.src.target as HTMLElement;
         card.style.left = `${i.diffClientX}px`;
         card.style.top = `${i.diffClientY}px`;
-        c.srcIndex = this.sourceIndex;
 
         if (this.insideRectangle(this.cards2.nativeElement.getBoundingClientRect(), i.tgt.clientX, i.tgt.clientY) &&
           !this.insideRectangle(this.cards2.nativeElement.getBoundingClientRect(), i.src.clientX, i.src.clientY)) {
@@ -66,23 +65,25 @@ export class TabCardsComponent implements AfterViewInit {
           !this.insideRectangle(this.cards1.nativeElement.getBoundingClientRect(), i.src.clientX, i.src.clientY)) {
             c.srcArray = this.dataService.cards2;
             c.tgtArray = this.dataService.cards1;
-          } else {
-            c.srcIndex = -1;
+          }
+          else {
+            c.srcArray = [];
+            c.tgtArray = [];
           }
         }
       })
       // Resets the position of the card if the command is invalid or cancelled
-      .ifCannotExecute((_, i) => {
+      .ifCannotExecute((_, i, acc) => {
         const card = i.src.target as HTMLElement;
-        card.style.left = this.mementoX;
-        card.style.top = this.mementoY;
-        card.style.position = this.mementoCSSPosition;
+        card.style.left = acc.mementoX;
+        card.style.top = acc.mementoY;
+        card.style.position = acc.mementoCSSPosition;
       })
-      .cancel(i => {
+      .cancel((i, acc) => {
         const card = i.src.target as HTMLElement;
-        card.style.left = this.mementoX;
-        card.style.top = this.mementoY;
-        card.style.position = this.mementoCSSPosition;
+        card.style.left = acc.mementoX;
+        card.style.top = acc.mementoY;
+        card.style.position = acc.mementoCSSPosition;
       })
       .bind();
   }

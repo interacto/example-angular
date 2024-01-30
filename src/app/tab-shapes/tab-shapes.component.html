@@ -1,4 +1,4 @@
-<app-dwell-spring #dwell></app-dwell-spring>
+<io-dwell-spring #dwell></io-dwell-spring>
 
 <div style="width: 100%; height: 93%">
 <as-split direction="horizontal" (dragEnd)="moveSplitPane(h)">
@@ -10,9 +10,10 @@
   <as-split-area [size]="80">
     <p>
       Multi-touch (two touches) creates a rectangle.<br/>
-      Three taps changes the color of the targeted rectangle.<br/>
-      A long touch (2 seconds) removes the targeted rectangle.<br/>
+      Three taps or clicks changes the color of the targeted rectangle.<br/>
+      A long touch or press (2 seconds) removes the targeted rectangle.<br/>
       Swipe horizontally to clear all the SVG shapes.<br/>
+      A DnD onto a rectangle moves it. Make a pause before dropping it to popup the cancelling bubble (release on it to cancel).<br/>
     </p>
     <br/>
 
