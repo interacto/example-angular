@@ -1,6 +1,6 @@
 {
   "name": "example-angular",
-  "version": "7.16.0",
+  "version": "8.16.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
