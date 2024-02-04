@@ -15,7 +15,7 @@
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:browser-esbuild",
           "options": {
             "outputPath": "dist/example-angular",
             "index": "src/index.html",
@@ -50,12 +50,9 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
               "extractLicenses": false,
-              "sourceMap": true,
-              "namedChunks": true
+              "sourceMap": true
             }
           },
           "defaultConfiguration": "production"
@@ -64,10 +61,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "example-angular:build:production"
+              "buildTarget": "example-angular:build:production"
             },
             "development": {
-              "browserTarget": "example-angular:build:development"
+              "buildTarget": "example-angular:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -75,7 +72,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "example-angular:build"
+            "buildTarget": "example-angular:build"
           }
         },
         "test": {
@@ -99,11 +96,5 @@
         }
       }
     }
-  },
-  "cli": {
-    "schematicCollections": [
-      "@angular-eslint/schematics"
-    ],
-    "analytics": false
   }
 }

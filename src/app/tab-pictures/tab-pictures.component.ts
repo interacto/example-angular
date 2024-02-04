@@ -4,11 +4,16 @@ import {Bindings, UndoHistoryBase} from 'interacto';
 import {ChangeCurrentPicture} from '../command/ChangeCurrentPicture';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 import {Zoom} from '../command/Zoom';
+import {InteractoModule} from 'interacto-angular';
+import {AngularSplitModule} from 'angular-split';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-tab-pictures',
+  standalone: true,
+  imports: [InteractoModule, AngularSplitModule, CommonModule],
   templateUrl: './tab-pictures.component.html',
-  styleUrls: ['./tab-pictures.component.css']
+  styleUrl: './tab-pictures.component.css'
 })
 export class TabPicturesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('carousel')

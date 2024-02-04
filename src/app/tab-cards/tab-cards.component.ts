@@ -1,12 +1,17 @@
 import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import {CardData, DataService} from '../service/data.service';
 import {Bindings, TransferArrayItem, UndoHistoryBase} from 'interacto';
-import {interactoProviders} from 'interacto-angular';
+import {InteractoModule, interactoProviders} from 'interacto-angular';
+import {MatCardModule} from '@angular/material/card';
+import {AngularSplitModule} from 'angular-split';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-tab-cards',
+  standalone: true,
+  imports: [MatCardModule, InteractoModule, AngularSplitModule, CommonModule],
   templateUrl: './tab-cards.component.html',
-  styleUrls: ['./tab-cards.component.css'],
+  styleUrl: './tab-cards.component.css',
   providers: [interactoProviders()]
 })
 export class TabCardsComponent implements AfterViewInit {
