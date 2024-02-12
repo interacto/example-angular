@@ -3,7 +3,7 @@
 <!-- <div> -->
 <as-split direction="horizontal" (dragEnd)="moveSplitPane(h)">
   <as-split-area #h [size]="20">
-    <io-tree-history #treeComp style="height: 80%" [style.width]="widthHistory">
+    <io-tree-history #treeComp style="height: 80%" [style.width]="widthHistory" [cmdViewWidth]="120">
     </io-tree-history>
   </as-split-area>
 
