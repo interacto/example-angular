@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
 import { Bindings, TreeUndoHistory } from 'interacto';
-import { DwellSpringComponent, interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
+import { DwellSpringComponent, InteractoModule, interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
 import { ChangeColor } from '../command/ChangeColor';
 import { DeleteAll } from '../command/DeleteAll';
 import { DeleteElt } from '../command/DeleteElt';
@@ -8,11 +8,14 @@ import { DrawRect } from '../command/DrawRect';
 import { MoveRect } from '../command/MoveRect';
 import { DataService } from '../service/data.service';
 import { TabContentComponent } from '../tab-content/tab-content.component';
+import {AngularSplitModule} from 'angular-split';
 
 @Component({
   selector: 'app-tab-shapes',
+  standalone: true,
+  imports: [InteractoModule, AngularSplitModule],
   templateUrl: './tab-shapes.component.html',
-  styleUrls: ['./tab-shapes.component.css'],
+  styleUrl: './tab-shapes.component.css',
   // This provider is optional. It permits to have a specific Bindings and thus a specific UndoHistory for this
   // component. Useful when you want to have different undo histories.
   providers: [interactoTreeUndoProviders()]

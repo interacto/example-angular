@@ -1,10 +1,13 @@
 import {AfterContentInit, Component, ContentChildren, QueryList} from '@angular/core';
 import {TabComponent} from '../tab/tab.component';
+import {CommonModule} from '@angular/common';
 
 @Component({
   selector: 'app-tabs',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './tabs.component.html',
-  styleUrls: ['./tabs.component.css']
+  styleUrl: './tabs.component.css'
 })
 export class TabsComponent implements AfterContentInit {
   @ContentChildren(TabComponent)

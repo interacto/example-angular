@@ -1,1 +1,7 @@
-@import '~@angular/material/prebuilt-themes/deeppurple-amber.css';
+@import '@angular/material/prebuilt-themes/deeppurple-amber.css';
+
+html, body {
+    min-height: 100vh;
+    height: auto;
+    margin: 0;
+  }

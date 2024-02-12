@@ -1,9 +1,9 @@
 <io-dwell-spring #dwell></io-dwell-spring>
 
-<div style="width: 100%; height: 93%">
+<!-- <div> -->
 <as-split direction="horizontal" (dragEnd)="moveSplitPane(h)">
   <as-split-area #h [size]="20">
-    <io-tree-history #treeComp style="height: 80%" [style.width]="widthHistory">
+    <io-tree-history #treeComp style="height: 80%" [style.width]="widthHistory" [cmdViewWidth]="120">
     </io-tree-history>
   </as-split-area>
 
@@ -18,9 +18,9 @@
     <br/>
 
     <div id="canvas-container">
-      <svg tabindex="0" #canvas width="100%" height="100%">
+      <svg tabindex="0" #canvas width="100%" height="90%">
       </svg>
     </div>
   </as-split-area>
 </as-split>
-</div>
+<!-- </div> -->
