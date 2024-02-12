@@ -3,9 +3,9 @@ Use ctrl + mouse wheel on pictures to zoom.
 <br/><br/>
 <div #carousel class="carousel">
   <div #container class="container">
-    <ng-container *ngFor="let picture of dataService.pictures; index as i">
-      <img #picture src="{{picture.src}}" alt="{{'image ' + i}}" [hidden]="dataService.currentPicture !== i">
-    </ng-container>
+    @for (picture of dataService.pictures; ; track picture.src) {
+      <img #picture src="{{picture.src}}" alt="{{'image ' + $index}}" [hidden]="dataService.currentPicture !== $index">
+    }
   </div>
 </div>
 
