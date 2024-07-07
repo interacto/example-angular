@@ -53,7 +53,7 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
 
-    this.bindings.reciprocalDndBinder(this.dwellSpring.handle, this.dwellSpring.spring)
+    this.bindings.reciprocalMouseOrTouchDnD(this.dwellSpring.handle, this.dwellSpring.spring)
       .onDynamic(this.canvas)
       .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
       .first((_, i) => {
@@ -68,22 +68,6 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       })
       // Must stop immediately if the touch does not concern a rectangle
       .when(i => !("button" in i.tgt) || i.tgt.button === 0)
-      .continuousExecution()
-      .bind();
-
-    this.bindings.touchDnDBinder(true)
-      .onDynamic(this.canvas)
-      .toProduce(i => new MoveRect(i.src.target as SVGRectElement, this.canvas.nativeElement))
-      .then((c, i) => {
-        c.vectorX = i.diffClientX;
-        c.vectorY = i.diffClientY;
-      })
-      // // Cannot start if multi points are used (ie if more than one point is currently used)
-      // .when(i => i.src.allTouches.length == 1, 'strictStart')
-      // // Cannot ends if multi points are used (ie if it remains more than 0 point)
-      // .when(i => i.tgt.allTouches.length == 0, 'end')
-      // // Cannot continue if multi points are used (ie if more than one point is currently used)
-      // .when(i => i.tgt.allTouches.length == 1, 'strictThen')
       .continuousExecution()
       .bind();
 
