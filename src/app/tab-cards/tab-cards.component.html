@@ -5,7 +5,7 @@
 
   <as-split-area [size]="80" #cardsPane>
     <div class="cards-block" #cards1>
-      @for (card of dataService.cards1; track card.id) {
+      @for (card of dataService.cards1(); track card.id) {
         <mat-card class="cards">
           <mat-card-header class="card-elt">
             <mat-card-title>{{card.title}}</mat-card-title>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="cards-block" #cards2>
-      @for (card of dataService.cards2; track card.id) {
+      @for (card of dataService.cards2(); track card.id) {
         <mat-card class="cards">
           <mat-card-header class="card-elt">
             <mat-card-title>{{card.title}}</mat-card-title>

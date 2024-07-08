@@ -9,11 +9,11 @@ export class SetText extends UndoableCommand {
     }
 
     protected override createMemento(): void {
-        this.memento = this.data.txt;
+        this.memento = this.data.txt();
     }
 
     protected execution(): void {
-        this.data.txt = this.newText!;
+        this.data.txt.set(this.newText!);
     }
 
     public override canExecute(): boolean {
@@ -25,7 +25,7 @@ export class SetText extends UndoableCommand {
     }
 
     public undo(): void {
-        this.data.txt = this.memento;
+        this.data.txt.set(this.memento);
     }
 
     public redo(): void {

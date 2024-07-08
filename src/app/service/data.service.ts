@@ -1,45 +1,40 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal, type WritableSignal } from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
 })
 export class DataService {
-  txt: string;
-  readonly cards1: Array<CardData>;
-  readonly cards2: Array<CardData>;
-  pictures = [
-    {src: 'https://picsum.photos/seed/1/600'},
-    {src: 'https://picsum.photos/seed/2/600'},
-    {src: 'https://picsum.photos/seed/3/600'},
-    {src: 'https://picsum.photos/seed/4/600'}
+  readonly txt: WritableSignal<string>;
+  readonly cards1: WritableSignal<Array<CardData>>;
+  readonly cards2: WritableSignal<Array<CardData>>;
+  readonly pictures: ReadonlyArray<string> = [
+    'https://picsum.photos/seed/1/600',
+    'https://picsum.photos/seed/2/600',
+    'https://picsum.photos/seed/3/600',
+    'https://picsum.photos/seed/4/600'
   ];
-  currentPicture = 0;
+  readonly currentPicture: WritableSignal<number>;
 
   public constructor() {
-    this.txt = 'foo';
-    this.cards1 = [];
-    this.cards2 = [];
-
-    this.cards1.push({
+    this.currentPicture = signal(0);
+    this.txt = signal('foo');
+    this.cards1 = signal([{
       id: 1,
       title: 'card 1',
       subTitle: 'The card 1',
       text: 'Some text for card 1'
-    });
-
-    this.cards1.push({
+    }, {
       id: 2,
       title: 'card 2',
       subTitle: 'The card 2',
       text: 'Some text for card 2'
-    });
-
-    this.cards2.push({
+    }]);
+    this.cards2 = signal([{
       id: 3,
       title: 'card 3',
       subTitle: 'The card 3',
       text: 'Some text for card 3'
-    });
+    }]);
   }
 }
 

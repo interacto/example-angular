@@ -4,7 +4,7 @@
   </as-split-area>
 
   <as-split-area [size]="80">
-    <textarea [ioTextarea]="writeTextBinder" rows="16" cols="100" value="{{dataService.txt}}"></textarea>
+    <textarea [ioTextarea]="writeTextBinder" rows="16" cols="100" value="{{dataService.txt()}}"></textarea>
     <br/>
     <button [ioButton]="clearClicksBinder" class="clearTextButton">Clear text</button>
   </as-split-area>

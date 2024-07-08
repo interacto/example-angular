@@ -63,13 +63,13 @@ export class TabCardsComponent implements AfterViewInit {
 
         if (this.insideRectangle(this.cards2.nativeElement.getBoundingClientRect(), i.tgt.clientX, i.tgt.clientY) &&
           !this.insideRectangle(this.cards2.nativeElement.getBoundingClientRect(), i.src.clientX, i.src.clientY)) {
-          c.srcArray = this.dataService.cards1;
-          c.tgtArray = this.dataService.cards2;
+          c.srcArray = this.dataService.cards1();
+          c.tgtArray = this.dataService.cards2();
         } else {
           if (this.insideRectangle(this.cards1.nativeElement.getBoundingClientRect(), i.tgt.clientX, i.tgt.clientY) &&
           !this.insideRectangle(this.cards1.nativeElement.getBoundingClientRect(), i.src.clientX, i.src.clientY)) {
-            c.srcArray = this.dataService.cards2;
-            c.tgtArray = this.dataService.cards1;
+            c.srcArray = this.dataService.cards2();
+            c.tgtArray = this.dataService.cards1();
           }
           else {
             c.srcArray = [];

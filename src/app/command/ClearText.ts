@@ -9,15 +9,15 @@ export class ClearText extends UndoableCommand {
     }
 
     protected override createMemento(): void {
-        this.memento = this.data.txt;
+        this.memento = this.data.txt();
     }
 
     protected execution(): void {
-        this.data.txt = '';
+        this.data.txt.set('');
     }
 
     public undo(): void {
-        this.data.txt = this.memento;
+        this.data.txt.set(this.memento);
     }
 
     public redo(): void {
