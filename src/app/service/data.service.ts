@@ -1,4 +1,4 @@
-import { Injectable, signal, type WritableSignal } from '@angular/core';
+import {Injectable, signal, type WritableSignal} from '@angular/core';
 
 @Injectable({
   providedIn: 'root'
@@ -14,6 +14,7 @@ export class DataService {
     'https://picsum.photos/seed/4/600'
   ];
   readonly currentPicture: WritableSignal<number>;
+  rootThumbnail: SVGElement | undefined;
 
   public constructor() {
     this.currentPicture = signal(0);

@@ -3,14 +3,14 @@ import {PartialButtonTypedBinder, PartialTextInputTypedBinder} from 'interacto';
 import {ClearText} from '../command/ClearText';
 import {SetText} from '../command/SetText';
 import {DataService} from '../service/data.service';
-import {InteractoModule, interactoProviders} from 'interacto-angular';
+import {ButtonBinderDirective, interactoProviders, LinearHistoryComponent, TextAreaBinderDirective} from 'interacto-angular';
 import {TabContentComponent} from '../tab-content/tab-content.component';
 import {AngularSplitModule} from 'angular-split';
 
 @Component({
   selector: 'app-tab-text',
   standalone: true,
-  imports: [InteractoModule, AngularSplitModule],
+  imports: [AngularSplitModule, LinearHistoryComponent, TextAreaBinderDirective, ButtonBinderDirective],
   templateUrl: './tab-text.component.html',
   styleUrl: './tab-text.component.css',
   providers: [interactoProviders()]

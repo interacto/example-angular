@@ -1,15 +1,23 @@
-<app-tabs style="width: 100%; height: 100%;">
-   <app-tab tabTitle="Create and edit rectangles">
+<mat-tab-group style="height: 100%;">
+  <mat-tab label="Create and edit rectangles">
     <app-tab-shapes></app-tab-shapes>
-  </app-tab>
-  <app-tab tabTitle="Type some text">
-    <app-tab-text></app-tab-text>
-  </app-tab>
-  <app-tab tabTitle="Drag cards">
-    <app-tab-cards></app-tab-cards>
-  </app-tab>
-  <app-tab tabTitle="Browse pictures">
-    <app-tab-pictures></app-tab-pictures>
-  </app-tab>
-</app-tabs>
-
+  </mat-tab>
+  <mat-tab label="Type some text">
+    <ng-template matTabContent>
+      <app-tab-text></app-tab-text>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Drag cards">
+    <ng-template matTabContent>
+      <app-tab-cards></app-tab-cards>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Browse pictures">
+    <ng-template matTabContent>
+      <app-tab-pictures></app-tab-pictures>
+    </ng-template>
+  </mat-tab>
+  <mat-tab label="Share the drawing history">
+    <app-tab-history-shapes></app-tab-history-shapes>
+  </mat-tab>
+</mat-tab-group>

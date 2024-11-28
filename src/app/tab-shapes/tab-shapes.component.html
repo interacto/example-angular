@@ -1,10 +1,11 @@
 <io-dwell-spring #dwell></io-dwell-spring>
 
-<!-- <div> -->
 <as-split direction="horizontal" (dragEnd)="moveSplitPane(h)">
   <as-split-area #h [size]="20">
-    <io-tree-history #treeComp style="height: 80%" [style.width]="widthHistory" [cmdViewWidth]="120">
+    <io-tree-history style="height: 80%" [style.width]="widthHistory" cmdViewWidth="120"
+                       svgViewportWidth="1300" svgViewportHeight="700" [rootRenderer]="rootThumbnail">
     </io-tree-history>
+<!--    <io-linear-history cmdViewWidth="120" svgViewportWidth="1300" svgViewportHeight="700"></io-linear-history>-->
   </as-split-area>
 
   <as-split-area [size]="80">
@@ -23,4 +24,3 @@
     </div>
   </as-split-area>
 </as-split>
-<!-- </div> -->

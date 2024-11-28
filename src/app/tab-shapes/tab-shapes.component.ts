@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core';
 import { Bindings, TreeUndoHistory } from 'interacto';
-import { DwellSpringComponent, InteractoModule, interactoTreeUndoProviders, TreeHistoryComponent } from 'interacto-angular';
+import {DwellSpringComponent, InteractoModule, TreeHistoryComponent} from 'interacto-angular';
 import { ChangeColor } from '../command/ChangeColor';
 import { DeleteAll } from '../command/DeleteAll';
 import { DeleteElt } from '../command/DeleteElt';
@@ -9,30 +9,35 @@ import { MoveRect } from '../command/MoveRect';
 import { DataService } from '../service/data.service';
 import { TabContentComponent } from '../tab-content/tab-content.component';
 import {AngularSplitModule} from 'angular-split';
+import {TreeHistoryModule} from '../tree-history.module';
 
 @Component({
   selector: 'app-tab-shapes',
   standalone: true,
-  imports: [InteractoModule, AngularSplitModule],
+  // The tree history is shared with another component (TabHistoryShapes).
+  // So, we imported it through a module
+  imports: [AngularSplitModule, DwellSpringComponent, TreeHistoryComponent, InteractoModule, TreeHistoryModule],
   templateUrl: './tab-shapes.component.html',
   styleUrl: './tab-shapes.component.css',
-  // This provider is optional. It permits to have a specific Bindings and thus a specific UndoHistory for this
-  // component. Useful when you want to have different undo histories.
-  providers: [interactoTreeUndoProviders()]
+  // We do not use this provider since this history is shared with another component.
+  // See the tree-history.module.ts
+  // providers: [interactoTreeUndoProviders()]
 })
 export class TabShapesComponent extends TabContentComponent implements AfterViewInit {
   @ViewChild('canvas')
   private canvas: ElementRef<SVGSVGElement>;
-
-  @ViewChild('treeComp')
-  private treeComp: TreeHistoryComponent;
 
   @ViewChild('dwell')
   private dwellSpring: DwellSpringComponent;
 
   public widthHistory: string = '20%';
 
-  public constructor(public dataService: DataService, public undoHistory: TreeUndoHistory, public bindings: Bindings<TreeUndoHistory>) {
+  protected rootThumbnail: SVGElement | undefined;
+
+  public constructor(public dataService: DataService,
+                     public undoHistory: TreeUndoHistory,
+                     public bindings: Bindings<TreeUndoHistory>
+  ) {
     super();
     // With Interacto-angular you can inject in components a Bindings single-instance that allows you
     // to define binders and bindings in ngAfterViewInit.
@@ -46,12 +51,12 @@ export class TabShapesComponent extends TabContentComponent implements AfterView
       evt.preventDefault();
     });
 
-    this.treeComp.svgViewportWidth = this.canvas.nativeElement.clientWidth;
-    this.treeComp.svgViewportHeight = this.canvas.nativeElement.clientHeight;
-
     const drawrect = new DrawRect(this.canvas.nativeElement);
     drawrect.setCoords(10, 10, 300, 300);
     drawrect.execute();
+
+    this.rootThumbnail = this.canvas.nativeElement.cloneNode(true) as SVGElement;
+    this.dataService.rootThumbnail = this.rootThumbnail;
 
     this.bindings.reciprocalMouseOrTouchDnD(this.dwellSpring.handle, this.dwellSpring.spring)
       .onDynamic(this.canvas)

@@ -1,6 +1,6 @@
 #canvas-container {
-  height: 75%;
-  width: 95%;
+  height: 700px;
+  width: 1300px;
   border:1px solid black;
   touch-action: none;
   margin: 10px;
